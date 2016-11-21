@@ -1,0 +1,11 @@
+artifacts
+node_modules
+lib
+bin
+obj
+published
+.vs
+*.user
+*.map
+*.lock.json
+.vscode
