@@ -1,26 +1,24 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Movies.Clients;
 using Movies.Clients.Interfaces;
-using Movies.Contexts;
+using Movies.Repositories.Interfaces;
 using Movies.Services.Interfaces;
 
 namespace Movies.Services
 {
     public class MoviesService : IMoviesService
     {
-        private readonly MoviesDbContext _db;
+	    private readonly IMoviesRepository _moviesRepository;
 
         private readonly IOmdbClient _omdbClient;
 
         private readonly ITmdbClient _tmdbClient;
 
-        public MoviesService(MoviesDbContext db, IOmdbClient omdbClient, ITmdbClient tmdbClient)
+        public MoviesService(IMoviesRepository moviesRepositorydb, IOmdbClient omdbClient, ITmdbClient tmdbClient)
         {
-            if (db == null)
+            if (moviesRepositorydb == null)
             {
-                throw new ArgumentNullException(nameof(db));
+                throw new ArgumentNullException(nameof(moviesRepositorydb));
             }
 
             if (omdbClient == null)
@@ -33,7 +31,7 @@ namespace Movies.Services
                 throw new ArgumentNullException(nameof(tmdbClient));
             }
 
-            _db = db;
+			_moviesRepository = moviesRepositorydb;
             _omdbClient = omdbClient;
             _tmdbClient = tmdbClient;
         }
@@ -44,15 +42,13 @@ namespace Movies.Services
 
             if (movie != null)
             {
-                _db.Movies.Add(movie);
-
-                await _db.SaveChangesAsync();
+				await _moviesRepository.AddMovie(movie);
             }
         }
 
         public async Task UpdateMoviesByGenre(string genre)
         {
-            var genreInstance = _db.Genres.SingleOrDefault(g => g.Name == genre);
+            var genreInstance = await _moviesRepository.GetGenre(genre);
 
             var movies = genreInstance != null ? await _tmdbClient.GetMoviesByGenre(genreInstance.GenreId) : null;
 
