@@ -8,7 +8,7 @@ namespace Movies.Services
 {
     public class MoviesService : IMoviesService
     {
-	    private readonly IMoviesRepository _moviesRepository;
+        private readonly IMoviesRepository _moviesRepository;
 
         private readonly IOmdbClient _omdbClient;
 
@@ -31,7 +31,7 @@ namespace Movies.Services
                 throw new ArgumentNullException(nameof(tmdbClient));
             }
 
-			_moviesRepository = moviesRepositorydb;
+            _moviesRepository = moviesRepositorydb;
             _omdbClient = omdbClient;
             _tmdbClient = tmdbClient;
         }
@@ -42,7 +42,7 @@ namespace Movies.Services
 
             if (movie != null)
             {
-				await _moviesRepository.AddMovie(movie);
+                await _moviesRepository.AddMovie(movie);
             }
         }
 

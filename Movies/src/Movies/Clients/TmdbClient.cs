@@ -2,8 +2,11 @@
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Movies.Clients.Interfaces;
+using Movies.Mappers.Interfaces;
+using Movies.Models;
 using Movies.Models.Dtos;
 using Newtonsoft.Json;
 
@@ -23,8 +26,17 @@ namespace Movies.Clients
 
         private readonly string _token;
 
-        public TmdbClient(string baseUrl, string token)
+        private readonly ISubject<Movie> _moviesSubject;
+
+        private readonly IMoviesMapper _moviesMapper;
+
+        public TmdbClient(string baseUrl, string token, IMoviesMapper moviesMapper)
         {
+            if (moviesMapper == null)
+            {
+                throw new ArgumentNullException(nameof(moviesMapper));
+            }
+
             _client = new HttpClient
             {
                 BaseAddress = new Uri(baseUrl)
@@ -34,6 +46,9 @@ namespace Movies.Clients
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             _token = token;
+            _moviesMapper = moviesMapper;
+
+            _moviesSubject = new Subject<Movie>();
         }
 
         public async Task<GenresCollection> GetGenres()
