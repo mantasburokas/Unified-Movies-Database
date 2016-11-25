@@ -3,8 +3,11 @@ using Newtonsoft.Json;
 
 namespace Movies.Models.Dtos
 {
-    public class MovieByGenre
+    public class MovieByGenreTmdb
     {
+        [JsonProperty(PropertyName = "id")]
+        public int Id { get; set; }
+
         [JsonProperty(PropertyName = "genre_ids")]
         public ICollection<int> GenreIds { get; set; }
 

@@ -7,7 +7,7 @@ namespace Movies.Mappers
 {
     public class MoviesMapper : IMoviesMapper
     {
-        public ICollection<Movie> Map(ICollection<MovieByGenre> moviesByGenre)
+        public ICollection<Movie> Map(ICollection<MovieByGenreTmdb> moviesByGenre)
         {
             var movies = new List<Movie>();
 

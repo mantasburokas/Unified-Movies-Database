@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Movies.Clients.Interfaces;
-using Movies.Mappers.Interfaces;
-using Movies.Models;
 using Movies.Models.Dtos;
 using Newtonsoft.Json;
 
@@ -14,19 +12,27 @@ namespace Movies.Clients
 {
     public class TmdbClient : ITmdbClient
     {
+        private static int counter = 1;
+
         private const string GenresEndPoint = "genre/movie/list";
 
         private const string MoviesByGenreEndPoint = "genre/{genreId}/movies";
+
+        private const string MovieByIdEndPoint = "movie/{movieId}";
 
         private const string ApiKeyFlag = "api_key=";
 
         private const string PageFlag = "page=";
 
+        private const string ExternalIdsFlag = "append_to_response=external_ids";
+
         private readonly HttpClient _client;
 
         private readonly string _token;
 
-        private readonly ISubject<Movie> _moviesSubject;
+        private readonly ISubject<MovieTmdb> _moviesTmdbSubject;
+
+        public IObservable<MovieTmdb> MoviesTmdbObservable { get; }
 
         public TmdbClient(string baseUrl, string token)
         {
@@ -40,7 +46,9 @@ namespace Movies.Clients
 
             _token = token;
 
-            _moviesSubject = new Subject<Movie>();
+            _moviesTmdbSubject = new Subject<MovieTmdb>();
+
+            MoviesTmdbObservable = _moviesTmdbSubject.AsObservable();
         }
 
         public async Task<GenresCollection> GetGenres()
@@ -61,16 +69,15 @@ namespace Movies.Clients
             return genres;
         }
 
-        public async Task<MoviesByGenreCollection> GetMoviesByGenre(int genreId)
+        public async Task GetMoviesByGenre(int genreId)
         {
-            MoviesByGenreCollection moviesCollection = new MoviesByGenreCollection
-            {
-                Page = 1
-            };
+            var page = 1;
+
+            var totalPages = int.MinValue;
 
             do
             {
-                var path = FormatPath(genreId, moviesCollection.Page);
+                var path = FormatPath(genreId, page);
 
                 var response = await _client.GetAsync(path);
 
@@ -80,28 +87,62 @@ namespace Movies.Clients
 
                     var moviesDeserialized = JsonConvert.DeserializeObject<MoviesByGenreCollection>(requestContent);
 
-                    if (moviesCollection.Movies == null)
+                    if (totalPages == int.MinValue)
                     {
-                        moviesCollection.Movies = moviesDeserialized.Movies;
-                        moviesCollection.TotalPages = moviesDeserialized.TotalPages;
-                    }
-                    else
-                    {
-                        moviesCollection.Movies = moviesCollection.Movies.Concat(moviesDeserialized.Movies).ToList();
+                        totalPages = moviesDeserialized.TotalPages;
                     }
 
-                    moviesCollection.Page++;
+                    foreach (var movieByGenre in moviesDeserialized.Movies)
+                    {
+                        var movieTmdb = await GetMovieById(movieByGenre.Id);
+
+                        _moviesTmdbSubject.OnNext(movieTmdb);
+
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"{counter++} send movie with imdb id: {movieTmdb.ImdbId}");
+                    }
+
+                    page++;
                 }
 
-                Console.WriteLine(moviesCollection.Page);
-            } while (moviesCollection.Page <= moviesCollection.TotalPages); 
+            } while (page <= totalPages);
+        }
 
-            return moviesCollection;
+        protected async Task<MovieTmdb> GetMovieById(int id)
+        {
+            var path = FormatPath(id);
+
+            MovieTmdb movie = null;
+
+            while (movie == null)
+            {
+                var response = await _client.GetAsync(path);
+
+                if (response.IsSuccessStatusCode && response.Content != null)
+                {
+                    var requestContent = await response.Content.ReadAsStringAsync();
+
+                    movie = JsonConvert.DeserializeObject<MovieTmdb>(requestContent);
+                }
+
+                if (movie == null)
+                {
+                    await Task.Delay(300);
+                }
+            }
+
+            return movie;
         }
 
         protected string FormatPath()
         {
             return GenresEndPoint + "?" + ApiKeyFlag + _token;
+        }
+
+        protected string FormatPath(int movieId)
+        {
+            return MovieByIdEndPoint.Replace("{" + nameof(movieId) + "}", movieId.ToString())
+                   + "?" + ApiKeyFlag + _token + "&" + ExternalIdsFlag;
         }
 
         protected string FormatPath(int genreId, int page)

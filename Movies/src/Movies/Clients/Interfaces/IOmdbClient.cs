@@ -6,5 +6,7 @@ namespace Movies.Clients.Interfaces
     public interface IOmdbClient
     {
         Task<Movie> GetMovieByTitle(string title);
+
+        Task<Movie> GetMovieByImdbId(string id);
     }
 }

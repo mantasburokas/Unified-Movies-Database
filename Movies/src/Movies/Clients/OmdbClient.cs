@@ -12,6 +12,8 @@ namespace Movies.Clients
     {
         private const string TitleFlag = "t=";
 
+        private const string ImdbIdFlag = "i=";
+
         private const string RottenTomatoesFlag = "tomatoes=true";
 
         private readonly HttpClient _client;
@@ -29,7 +31,7 @@ namespace Movies.Clients
 
         public async Task<Movie> GetMovieByTitle(string title)
         {
-            var path = FormatPath(title);
+            var path = FormatPath(TitleFlag, title);
 
             var response = await _client.GetAsync(path);
 
@@ -45,9 +47,36 @@ namespace Movies.Clients
             return movie;
         }
 
-        protected string FormatPath(string title)
+        public async Task<Movie> GetMovieByImdbId(string id)
         {
-            return "?" + TitleFlag + title + "&" + RottenTomatoesFlag;
+            var path = FormatPath(ImdbIdFlag, id);
+
+            Movie movie = null;
+
+            while (movie == null)
+            {
+                var response = await _client.GetAsync(path);
+
+                if (response.IsSuccessStatusCode && response.Content != null)
+                {
+                    var requestContent = await response.Content.ReadAsStringAsync();
+
+                    movie = JsonConvert.DeserializeObject<Movie>(requestContent);
+                }
+
+                if (movie == null)
+                {
+                    Console.WriteLine("Recieved a cooldown from Omdb");
+                    await Task.Delay(300);
+                }
+            }
+
+            return movie;
+        }
+
+        protected string FormatPath(string flag, string value)
+        {
+            return "?" + flag + value + "&" + RottenTomatoesFlag;
         }
     }
 }

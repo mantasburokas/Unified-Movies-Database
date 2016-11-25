@@ -39,7 +39,7 @@ namespace Movies.Controllers
         [Route("{title}", Name = nameof(MovieRoutes.GetMovieByTitle))]
         public IActionResult GetMovieByTitle(string title)
         {
-            var movie = _db.Movies.SingleOrDefault(m => m.Title.ToLower() == title.ToLower());
+            var movie = _db.Movies.SingleOrDefault(m => string.Equals(m.Title, title, StringComparison.CurrentCultureIgnoreCase));
 
             if (movie == null)
             {

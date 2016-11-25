@@ -8,7 +8,7 @@ namespace Movies.Models.Dtos
         public int Page { get; set; }
 
         [JsonProperty(PropertyName = "results")]
-        public ICollection<MovieByGenre> Movies { get; set; }
+        public ICollection<MovieByGenreTmdb> Movies { get; set; }
 
         [JsonProperty(PropertyName = "total_pages")]
         public int TotalPages { get; set; }

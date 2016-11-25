@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Movies.Clients.Interfaces;
 using Movies.Repositories.Interfaces;
@@ -38,7 +39,19 @@ namespace Movies.Services
 
         public async Task UpdateMoviesByTitle(string title)
         {
+            Console.WriteLine(title);
+
             var movie = await _omdbClient.GetMovieByTitle(title);
+
+            if (movie != null)
+            {
+                await _moviesRepository.AddMovie(movie);
+            }
+        }
+
+        protected async Task UpdateMoviesByImdbId(string id)
+        {
+            var movie = await _omdbClient.GetMovieByImdbId(id);
 
             if (movie != null)
             {
@@ -50,11 +63,15 @@ namespace Movies.Services
         {
             var genreInstance = await _moviesRepository.GetGenre(genre);
 
-            var movies = genreInstance != null ? await _tmdbClient.GetMoviesByGenre(genreInstance.GenreId) : null;
-
-            if (movies != null)
+            if (genreInstance != null)
             {
-                
+                var moviesByGenreObservable = _tmdbClient.MoviesTmdbObservable;
+
+                moviesByGenreObservable
+                    .Do( movieTmdb =>  UpdateMoviesByImdbId(movieTmdb.ImdbId).GetAwaiter().GetResult())
+                    .Subscribe();
+
+                await _tmdbClient.GetMoviesByGenre(genreInstance.GenreId);
             }
         }
     }

@@ -6,6 +6,6 @@ namespace Movies.Mappers.Interfaces
 {
     public interface IMoviesMapper
     {
-        ICollection<Movie> Map(ICollection<MovieByGenre> moviesByGenre);
+        ICollection<Movie> Map(ICollection<MovieByGenreTmdb> moviesByGenre);
     }
 }

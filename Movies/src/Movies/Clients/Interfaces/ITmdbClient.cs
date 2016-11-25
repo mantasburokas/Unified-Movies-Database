@@ -1,12 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Movies.Models.Dtos;
 
 namespace Movies.Clients.Interfaces
 {
     public interface ITmdbClient
     {
+        IObservable<MovieTmdb> MoviesTmdbObservable { get; }
+
         Task<GenresCollection> GetGenres();
 
-        Task<MoviesByGenreCollection> GetMoviesByGenre(int genreId);
+        Task GetMoviesByGenre(int genreId);
     }
 }
