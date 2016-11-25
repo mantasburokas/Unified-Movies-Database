@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Movies.Contexts;
+using Movies.Contexts.Interfaces;
 using Movies.Models;
 using Movies.Repositories.Interfaces;
 
@@ -10,18 +10,18 @@ namespace Movies.Repositories
 {
     public class MoviesRepository : IMoviesRepository
     {
-        private readonly MoviesDbContext _db;
-
         private static int counter = 1;
 
-        public MoviesRepository(MoviesDbContext db)
+        private readonly IMoviesDbContextFactory _dbFactory;
+
+        public MoviesRepository(IMoviesDbContextFactory dbFactory)
         {
-            if (db == null)
+            if (dbFactory == null)
             {
-                throw new ArgumentNullException(nameof(db));
+                throw new ArgumentNullException(nameof(dbFactory));
             }
 
-            _db = db;
+            _dbFactory = dbFactory;
         }
 
         public async Task AddMovie(Movie movie)
@@ -35,44 +35,66 @@ namespace Movies.Repositories
 
             Console.WriteLine(counter++ + $": Adding movie title: {movie.Title}");
 
-            var movieExists = await _db.Movies.
-                SingleOrDefaultAsync(m => m.Title == movie.Title && m.Released == movie.Released);
-
-            if (movieExists == null && movie.Title != null)
+            using (var db = _dbFactory.Create())
             {
-                try
-                {
-                    _db.Movies.Add(movie);
+                var movieExists = db.Movies.SingleOrDefault(m => m.Title == movie.Title && m.Released == movie.Released);
 
-                    await _db.SaveChangesAsync();
-                }
-                catch (Exception ex)
+                if (movieExists == null && movie.Title != null)
                 {
-                    Console.WriteLine("O krv, wtf");
+                    try
+                    {
+                        db.Movies.Add(movie);
+
+                        await db.SaveChangesAsync();
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("O krv, wtf");
+                    }
                 }
             }
         }
 
-        public async Task<Movie> GetMovieByTitle(string title)
+        public ICollection<Movie> GetMoviesByGenre(string genre)
         {
-            return await _db.Movies.SingleOrDefaultAsync(m => m.Title == title);
+            using (var db = _dbFactory.Create())
+            {
+                return db.Movies.Where(m => m.MovieGenres.All(mg => mg.Genre.Name == genre)).ToList();
+            }
+        }
+
+        public Movie GetMovieByTitle(string title)
+        {
+            using (var db = _dbFactory.Create())
+            {
+                return db.Movies.SingleOrDefault(m => m.Title == title);
+            }
         }
 
         public async Task AddGenres(ICollection<Genre> genres)
         {
-            _db.Genres.AddRange(genres);
+            using (var db = _dbFactory.Create())
+            {
+                db.Genres.AddRange(genres);
 
-            await _db.SaveChangesAsync();
+                await db.SaveChangesAsync();
+            }
         }
 
-        public Task<Genre> GetGenre(string name)
+        public Genre GetGenre(string name)
         {
-            return _db.Genres.SingleOrDefaultAsync(g => g.Name == name);
+            using (var db = _dbFactory.Create())
+            {
+                return db.Genres.SingleOrDefault(g => g.Name == name);
+            }
         }
 
-        public Task<Genre[]> GetGenres()
+        public Genre[] GetGenres()
         {
-            return _db.Genres.ToArrayAsync();
+            using (var db = _dbFactory.Create())
+            {
+                return db.Genres.ToArray();
+            }
         }
     }
 }

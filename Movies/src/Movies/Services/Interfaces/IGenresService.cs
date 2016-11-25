@@ -8,6 +8,6 @@ namespace Movies.Services.Interfaces
     {
         Task UpdateGenres();
 
-        Task<ICollection<Genre>> GetGenres();
+        ICollection<Genre> GetGenres();
     }
 }

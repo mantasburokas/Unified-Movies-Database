@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Movies.Clients;
 using Movies.Clients.Interfaces;
 using Movies.Contexts;
+using Movies.Contexts.Interfaces;
 using Movies.Mappers;
 using Movies.Mappers.Interfaces;
 using Movies.Repositories;
@@ -31,8 +32,6 @@ namespace Movies
 
         public void ConfigureServices(IServiceCollection services)
         {
-            ConfigureMoviesDb(services);
-
             services.AddMvc();
 
             services.AddSwaggerGen();
@@ -43,13 +42,16 @@ namespace Movies
 
             var tmdbToken = Configuration["TmdbApi:Token"];
 
-	        services
-		        .AddSingleton<IOmdbClient>(new OmdbClient(omdbBaseUrl))
-		        .AddSingleton<ITmdbClient>(new TmdbClient(tmdbBaseUrl, tmdbToken))
-		        .AddSingleton<IMoviesService, MoviesService>()
-		        .AddSingleton<IGenresService, GenresService>()
-		        .AddSingleton<IGenresMapper, GenresMapper>()
-		        .AddSingleton<IMoviesRepository, MoviesRepository>();
+            var connectionString = Configuration["MoviesDb:ConnectionString"];
+
+            services
+                .AddSingleton<IOmdbClient>(new OmdbClient(omdbBaseUrl))
+                .AddSingleton<ITmdbClient>(new TmdbClient(tmdbBaseUrl, tmdbToken))
+                .AddSingleton<IMoviesService, MoviesService>()
+                .AddSingleton<IGenresService, GenresService>()
+                .AddSingleton<IGenresMapper, GenresMapper>()
+                .AddSingleton<IMoviesDbContextFactory>(new MoviesDbContextFactory(connectionString))
+                .AddTransient<IMoviesRepository, MoviesRepository>();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -59,13 +61,6 @@ namespace Movies
             app.UseSwagger();
 
             app.UseSwaggerUi();
-        }
-
-        protected void ConfigureMoviesDb(IServiceCollection services)
-        {
-            var connectionString = Configuration["MoviesDb:ConnectionString"];
-
-            services.AddDbContext<MoviesDbContext>(options => options.UseSqlite(connectionString));
         }
     }
 }

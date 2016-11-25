@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Movies.Clients.Interfaces;
 using Movies.Models.Dtos;
 using Newtonsoft.Json;
@@ -79,7 +80,16 @@ namespace Movies.Clients
             {
                 var path = FormatPath(genreId, page);
 
-                var response = await _client.GetAsync(path);
+                HttpResponseMessage response = null;
+
+                try
+                {
+                    response = await _client.GetAsync(path);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
 
                 if (response.IsSuccessStatusCode && response.Content != null)
                 {
@@ -124,10 +134,14 @@ namespace Movies.Clients
 
                     movie = JsonConvert.DeserializeObject<MovieTmdb>(requestContent);
                 }
+                else
+                {
+                    Console.WriteLine("wtf");
+                }
 
                 if (movie == null)
                 {
-                    await Task.Delay(300);
+                    await Task.Delay(1000);
                 }
             }
 

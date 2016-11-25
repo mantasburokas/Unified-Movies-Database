@@ -4,16 +4,18 @@ using Movies.Models;
 
 namespace Movies.Repositories.Interfaces
 {
-	public interface IMoviesRepository
-	{
-		Task AddMovie(Movie movie);
+    public interface IMoviesRepository
+    {
+        Task AddMovie(Movie movie);
 
-		Task<Movie> GetMovieByTitle(string title);
+        ICollection<Movie> GetMoviesByGenre(string genre);
+            
+        Movie GetMovieByTitle(string title);
 
-		Task AddGenres(ICollection<Genre> genres);
+        Task AddGenres(ICollection<Genre> genres);
 
-		Task<Genre> GetGenre(string name);
+        Genre GetGenre(string name);
 
-		Task<Genre[]> GetGenres();
-	}
+        Genre[] GetGenres();
+    }
 }

@@ -24,9 +24,9 @@ namespace Movies.Controllers
 
         [HttpGet]
         [Route("", Name = nameof(GenreRoutes.GetGenres))]
-        public async Task<IActionResult> GetGenres()
+        public IActionResult GetGenres()
         {
-            var genres = await _genresService.GetGenres();
+            var genres = _genresService.GetGenres();
 
             if (genres == null || !genres.Any())
             {

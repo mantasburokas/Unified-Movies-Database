@@ -52,9 +52,9 @@ namespace Movies.Services
             }
         }
 
-        public async Task<ICollection<Genre>> GetGenres()
+        public ICollection<Genre> GetGenres()
         {
-            var genrePocos = await _moviesRepository.GetGenres();
+            var genrePocos = _moviesRepository.GetGenres();
 
             var genreDtos = _mapper.Map(genrePocos);
 
