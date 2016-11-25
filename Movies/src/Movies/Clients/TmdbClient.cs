@@ -28,15 +28,8 @@ namespace Movies.Clients
 
         private readonly ISubject<Movie> _moviesSubject;
 
-        private readonly IMoviesMapper _moviesMapper;
-
-        public TmdbClient(string baseUrl, string token, IMoviesMapper moviesMapper)
+        public TmdbClient(string baseUrl, string token)
         {
-            if (moviesMapper == null)
-            {
-                throw new ArgumentNullException(nameof(moviesMapper));
-            }
-
             _client = new HttpClient
             {
                 BaseAddress = new Uri(baseUrl)
@@ -46,7 +39,6 @@ namespace Movies.Clients
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             _token = token;
-            _moviesMapper = moviesMapper;
 
             _moviesSubject = new Subject<Movie>();
         }
