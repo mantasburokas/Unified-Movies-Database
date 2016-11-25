@@ -2,9 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Movies.Contexts;
 using Movies.Helpers;
-using Movies.Mappers.Interfaces;
 using Movies.Services.Interfaces;
 
 namespace Movies.Controllers
@@ -12,50 +10,34 @@ namespace Movies.Controllers
     [Route("api/genres")]
     public class GenresController : Controller
     {
-        private readonly MoviesDbContext _db;
-
         private readonly IGenresService _genresService;
 
-        private readonly IGenresMapper _mapper;
-
-        public GenresController(MoviesDbContext db, IGenresService genresService, IGenresMapper mapper)
+        public GenresController(IGenresService genresService)
         {
-            if (db == null)
-            {
-                throw new ArgumentNullException(nameof(db));
-            }
-
             if (genresService == null)
             {
                 throw new ArgumentNullException(nameof(genresService));
             }
 
-            if (mapper == null)
-            {
-                throw new ArgumentNullException(nameof(mapper));
-            }
-
-            _db = db;
             _genresService = genresService;
-            _mapper = mapper;
         }
 
         [HttpGet]
         [Route("", Name = nameof(GenreRoutes.GetGenres))]
-        public IActionResult GetGenres()
+        public async Task<IActionResult> GetGenres()
         {
-            var genres = _db.Genres.ToList();
+            var genres = await _genresService.GetGenres();
 
             if (genres == null || !genres.Any())
             {
-                Task.Factory.StartNew(() => _genresService.UpdateGenres());
+                #pragma warning disable 4014
+                _genresService.UpdateGenres();
+                #pragma warning restore 4014
 
                 return NoContent();
             }
 
-            var genreDtos = _mapper.Map(genres);
-
-            return Ok(genreDtos);
+            return Ok(genres);
         }
     }
 }

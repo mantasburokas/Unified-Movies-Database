@@ -8,6 +8,8 @@ using Movies.Clients.Interfaces;
 using Movies.Contexts;
 using Movies.Mappers;
 using Movies.Mappers.Interfaces;
+using Movies.Repositories;
+using Movies.Repositories.Interfaces;
 using Movies.Services;
 using Movies.Services.Interfaces;
 
@@ -41,12 +43,13 @@ namespace Movies
 
             var tmdbToken = Configuration["TmdbApi:Token"];
 
-            services
-                .AddSingleton<IOmdbClient>(new OmdbClient(omdbBaseUrl))
-                .AddSingleton<ITmdbClient>(new TmdbClient(tmdbBaseUrl, tmdbToken))
-                .AddSingleton<IMoviesService, MoviesService>()
-                .AddSingleton<IGenresService, GenresService>()
-                .AddSingleton<IGenresMapper, GenresMapper>();
+	        services
+		        .AddSingleton<IOmdbClient>(new OmdbClient(omdbBaseUrl))
+		        .AddSingleton<ITmdbClient>(new TmdbClient(tmdbBaseUrl, tmdbToken))
+		        .AddSingleton<IMoviesService, MoviesService>()
+		        .AddSingleton<IGenresService, GenresService>()
+		        .AddSingleton<IGenresMapper, GenresMapper>()
+		        .AddSingleton<IMoviesRepository, MoviesRepository>();
         }
 
         public void Configure(IApplicationBuilder app)

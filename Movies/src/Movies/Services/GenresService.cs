@@ -1,26 +1,27 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Movies.Clients.Interfaces;
-using Movies.Contexts;
 using Movies.Mappers.Interfaces;
+using Movies.Models.Dtos;
+using Movies.Repositories.Interfaces;
 using Movies.Services.Interfaces;
 
 namespace Movies.Services
 {
     public class GenresService : IGenresService
     {
-        private readonly MoviesDbContext _db;
+        private readonly IMoviesRepository _moviesRepository;
 
         private readonly ITmdbClient _client;
 
         private readonly IGenresMapper _mapper;
 
-        public GenresService(MoviesDbContext db, ITmdbClient client, IGenresMapper mapper)
+        public GenresService(IMoviesRepository moviesRepository, ITmdbClient client, IGenresMapper mapper)
         {
-            if (db == null)
+            if (moviesRepository == null)
             {
-                throw new ArgumentNullException(nameof(db));
+                throw new ArgumentNullException(nameof(moviesRepository));
             }
 
             if (client == null)
@@ -33,9 +34,10 @@ namespace Movies.Services
                 throw new ArgumentNullException(nameof(mapper));
             }
 
-            _db = db;
+            _moviesRepository = moviesRepository;
             _client = client;
             _mapper = mapper;
+            _moviesRepository = moviesRepository;
         }
 
         public async Task UpdateGenres()
@@ -46,10 +48,17 @@ namespace Movies.Services
             {
                 var genresCollection = _mapper.Map(genres);
 
-                _db.Genres.AddRange(genresCollection);
-                
-                await _db.SaveChangesAsync();
+                await _moviesRepository.AddGenres(genresCollection);
             }
+        }
+
+        public async Task<ICollection<Genre>> GetGenres()
+        {
+            var genrePocos = await _moviesRepository.GetGenres();
+
+            var genreDtos = _mapper.Map(genrePocos);
+
+            return genreDtos;
         }
     }
 }

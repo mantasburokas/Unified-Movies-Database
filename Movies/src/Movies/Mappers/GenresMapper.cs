@@ -24,7 +24,7 @@ namespace Movies.Mappers
             return genresList;
         }
 
-        public ICollection<Genre> Map(ICollection<GenrePoco> genres)
+        public ICollection<GenreDto> Map(ICollection<GenrePoco> genres)
         {
             var genresList = new List<GenreDto>();
 

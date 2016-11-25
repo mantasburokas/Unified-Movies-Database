@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Movies.Contexts;
 using Movies.Helpers;
-using Movies.Models;
-using Movies.Services;
 using Movies.Services.Interfaces;
 
 namespace Movies.Controllers

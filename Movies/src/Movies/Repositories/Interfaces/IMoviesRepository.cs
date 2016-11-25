@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Movies.Models;
 
 namespace Movies.Repositories.Interfaces
@@ -7,6 +8,10 @@ namespace Movies.Repositories.Interfaces
 	{
 		Task<int> AddMovie(Movie movie);
 
-		Task GetGenre(string name);
+		Task<int> AddGenres(ICollection<Genre> genres);
+
+		Task<Genre> GetGenre(string name);
+
+		Task<Genre[]> GetGenres();
 	}
 }

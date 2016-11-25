@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Movies.Contexts;
@@ -28,9 +29,21 @@ namespace Movies.Repositories
 			return _db.SaveChangesAsync();
 		}
 
+		public Task<int> AddGenres(ICollection<Genre> genres)
+		{
+			_db.Genres.AddRange(genres);
+
+			return _db.SaveChangesAsync();
+		}
+
 		public Task<Genre> GetGenre(string name)
 		{
 			return _db.Genres.SingleOrDefaultAsync(g => g.Name == name);
+		}
+
+		public Task<Genre[]> GetGenres()
+		{
+			return _db.Genres.ToArrayAsync();
 		}
 	}
 }
