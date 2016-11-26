@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Movies.Contexts.Interfaces;
 using Movies.Models;
 using Movies.Repositories.Interfaces;
@@ -10,8 +11,6 @@ namespace Movies.Repositories
 {
     public class MoviesRepository : IMoviesRepository
     {
-        private static int counter = 1;
-
         private readonly IMoviesDbContextFactory _dbFactory;
 
         public MoviesRepository(IMoviesDbContextFactory dbFactory)
@@ -24,33 +23,35 @@ namespace Movies.Repositories
             _dbFactory = dbFactory;
         }
 
-        public async Task AddMovie(Movie movie)
+        public async Task AddMovies(ICollection<Movie> movies)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-
-            if (movie.Title == null)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-            }
-
-            Console.WriteLine(counter++ + $": Adding movie title: {movie.Title}");
-
             using (var db = _dbFactory.Create())
             {
-                var movieExists = db.Movies.SingleOrDefault(m => m.Title == movie.Title && m.Released == movie.Released);
-
-                if (movieExists == null && movie.Title != null)
+                foreach (var movie in movies)
                 {
-                    try
+                    var movieExists = await db.Movies.AnyAsync(m => m.Title == movie.Title && m.Released == movie.Released);
+
+                    if (!movieExists)
                     {
                         db.Movies.Add(movie);
 
                         await db.SaveChangesAsync();
                     }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("O krv, wtf");
-                    }
+                }
+            }
+        }
+
+        public async Task AddMovie(Movie movie)
+        {
+            using (var db = _dbFactory.Create())
+            {
+                var movieExists = await db.Movies.AnyAsync(m => m.Title == movie.Title && m.Released == movie.Released);
+
+                if (!movieExists && movie.Title != null)
+                {
+                    db.Movies.Add(movie);
+
+                    await db.SaveChangesAsync();
                 }
             }
         }
@@ -75,9 +76,17 @@ namespace Movies.Repositories
         {
             using (var db = _dbFactory.Create())
             {
-                db.Genres.AddRange(genres);
+                foreach (var genre in genres)
+                {
+                    var genreExists = await db.Genres.AnyAsync(g => g.GenreId == genre.GenreId);
 
-                await db.SaveChangesAsync();
+                    if (!genreExists)
+                    {
+                        db.Genres.Add(genre);
+
+                        await db.SaveChangesAsync();
+                    }
+                }
             }
         }
 
@@ -86,6 +95,14 @@ namespace Movies.Repositories
             using (var db = _dbFactory.Create())
             {
                 return db.Genres.SingleOrDefault(g => g.Name == name);
+            }
+        }
+
+        public Genre GetGenre(int id)
+        {
+            using (var db = _dbFactory.Create())
+            {
+                return db.Genres.SingleOrDefault(g => g.GenreId == id);
             }
         }
 

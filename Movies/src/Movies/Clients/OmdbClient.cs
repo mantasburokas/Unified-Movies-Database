@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Movies.Clients.Interfaces;
-using Movies.Models;
+using Movies.Models.Dtos;
 using Newtonsoft.Json;
 
 namespace Movies.Clients
@@ -29,29 +30,29 @@ namespace Movies.Clients
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<Movie> GetMovieByTitle(string title)
+        public async Task<MovieOmdb> GetMovieByTitle(string title)
         {
             var path = FormatPath(TitleFlag, title);
 
             var response = await _client.GetAsync(path);
 
-            Movie movie = null;
+            MovieOmdb movie = null;
 
             if (response.IsSuccessStatusCode && response.Content != null)
             {
                 var requestContent = await response.Content.ReadAsStringAsync();
 
-                movie = JsonConvert.DeserializeObject<Movie>(requestContent);
+                movie = JsonConvert.DeserializeObject<MovieOmdb>(requestContent);
             }
 
             return movie;
         }
 
-        public async Task<Movie> GetMovieByImdbId(string id)
+        public async Task<MovieOmdb> GetMovieByImdbId(string id)
         {
             var path = FormatPath(ImdbIdFlag, id);
 
-            Movie movie = null;
+            MovieOmdb movie = null;
 
             while (movie == null)
             {
@@ -61,13 +62,12 @@ namespace Movies.Clients
                 {
                     var requestContent = await response.Content.ReadAsStringAsync();
 
-                    movie = JsonConvert.DeserializeObject<Movie>(requestContent);
+                    movie = JsonConvert.DeserializeObject<MovieOmdb>(requestContent);
                 }
 
-                if (movie == null)
+                if (response.StatusCode == (HttpStatusCode)429)
                 {
-                    Console.WriteLine("Recieved a cooldown from Omdb");
-                    await Task.Delay(300);
+                    await Task.Delay(3000);
                 }
             }
 

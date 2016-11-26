@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Movies.Models;
+using Movies.Models.Dtos;
 
 namespace Movies.Clients.Interfaces
 {
     public interface IOmdbClient
     {
-        Task<Movie> GetMovieByTitle(string title);
+        Task<MovieOmdb> GetMovieByTitle(string title);
 
-        Task<Movie> GetMovieByImdbId(string id);
+        Task<MovieOmdb> GetMovieByImdbId(string id);
     }
 }

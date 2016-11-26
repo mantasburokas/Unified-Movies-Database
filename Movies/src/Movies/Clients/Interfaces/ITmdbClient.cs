@@ -6,10 +6,10 @@ namespace Movies.Clients.Interfaces
 {
     public interface ITmdbClient
     {
-        IObservable<MovieTmdb> MoviesTmdbObservable { get; }
-
         Task<GenresCollection> GetGenres();
 
-        Task GetMoviesByGenre(int genreId);
+        IObservable<MovieTmdb> GetMoviesByGenre(int genreId);
+
+        Task<MoviesByImdbIdTmdb> GetMoviesByImdbId(string imdbId);
     }
 }

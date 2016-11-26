@@ -50,6 +50,7 @@ namespace Movies
                 .AddSingleton<IMoviesService, MoviesService>()
                 .AddSingleton<IGenresService, GenresService>()
                 .AddSingleton<IGenresMapper, GenresMapper>()
+                .AddSingleton<IMoviesMapper, MoviesMapper>()
                 .AddSingleton<IMoviesDbContextFactory>(new MoviesDbContextFactory(connectionString))
                 .AddTransient<IMoviesRepository, MoviesRepository>();
         }

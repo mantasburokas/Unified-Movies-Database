@@ -6,6 +6,8 @@ namespace Movies.Repositories.Interfaces
 {
     public interface IMoviesRepository
     {
+        Task AddMovies(ICollection<Movie> movie);
+
         Task AddMovie(Movie movie);
 
         ICollection<Movie> GetMoviesByGenre(string genre);
@@ -15,6 +17,8 @@ namespace Movies.Repositories.Interfaces
         Task AddGenres(ICollection<Genre> genres);
 
         Genre GetGenre(string name);
+
+        Genre GetGenre(int id);
 
         Genre[] GetGenres();
     }

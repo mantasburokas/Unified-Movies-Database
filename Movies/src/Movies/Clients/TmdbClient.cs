@@ -1,25 +1,25 @@
-﻿using System;
+﻿using Movies.Clients.Interfaces;
+using Movies.Models.Dtos;
+using Newtonsoft.Json;
+using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Movies.Clients.Interfaces;
-using Movies.Models.Dtos;
-using Newtonsoft.Json;
 
 namespace Movies.Clients
 {
     public class TmdbClient : ITmdbClient
     {
-        private static int counter = 1;
-
         private const string GenresEndPoint = "genre/movie/list";
 
         private const string MoviesByGenreEndPoint = "genre/{genreId}/movies";
 
         private const string MovieByIdEndPoint = "movie/{movieId}";
+
+        private const string MovieByImdbIdEndPoint = "find/{imdbId}";
 
         private const string ApiKeyFlag = "api_key=";
 
@@ -30,10 +30,6 @@ namespace Movies.Clients
         private readonly HttpClient _client;
 
         private readonly string _token;
-
-        private readonly ISubject<MovieTmdb> _moviesTmdbSubject;
-
-        public IObservable<MovieTmdb> MoviesTmdbObservable { get; }
 
         public TmdbClient(string baseUrl, string token)
         {
@@ -46,31 +42,61 @@ namespace Movies.Clients
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             _token = token;
-
-            _moviesTmdbSubject = new Subject<MovieTmdb>();
-
-            MoviesTmdbObservable = _moviesTmdbSubject.AsObservable();
         }
 
         public async Task<GenresCollection> GetGenres()
         {
             var path = FormatPath();
 
-            var response = await _client.GetAsync(path);
-
             GenresCollection genres = null;
 
-            if (response.IsSuccessStatusCode && response.Content != null)
+            while (genres == null)
             {
-                var requestContent = await response.Content.ReadAsStringAsync();
+                var response = await _client.GetAsync(path);
 
-                genres = JsonConvert.DeserializeObject<GenresCollection>(requestContent);
+                if (response.IsSuccessStatusCode && response.Content != null)
+                {
+                    var requestContent = await response.Content.ReadAsStringAsync();
+
+                    genres = JsonConvert.DeserializeObject<GenresCollection>(requestContent);
+                }
+
             }
 
             return genres;
         }
 
-        public async Task GetMoviesByGenre(int genreId)
+        public IObservable<MovieTmdb> GetMoviesByGenre(int genreId)
+        {
+            var movieSubject = new Subject<MovieTmdb>();
+
+            GetMoviesByGenreInternal(genreId, movieSubject);
+
+            return movieSubject.AsObservable();
+        }
+
+        public async Task<MoviesByImdbIdTmdb> GetMoviesByImdbId(string imdbId)
+        {
+            var path = FormatPath(imdbId);
+
+            MoviesByImdbIdTmdb movies = null;
+
+            while (movies == null)
+            {
+                var response = await _client.GetAsync(path);
+
+                if (response.IsSuccessStatusCode && response.Content != null)
+                {
+                    var requestContent = await response.Content.ReadAsStringAsync();
+
+                    movies = JsonConvert.DeserializeObject<MoviesByImdbIdTmdb>(requestContent);
+                }
+            }
+
+            return movies;
+        }
+
+        protected async Task GetMoviesByGenreInternal(int genreId, ISubject<MovieTmdb> movieSubject)
         {
             var page = 1;
 
@@ -80,16 +106,7 @@ namespace Movies.Clients
             {
                 var path = FormatPath(genreId, page);
 
-                HttpResponseMessage response = null;
-
-                try
-                {
-                    response = await _client.GetAsync(path);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                var response = await _client.GetAsync(path);
 
                 if (response.IsSuccessStatusCode && response.Content != null)
                 {
@@ -106,10 +123,10 @@ namespace Movies.Clients
                     {
                         var movieTmdb = await GetMovieById(movieByGenre.Id);
 
-                        _moviesTmdbSubject.OnNext(movieTmdb);
-
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"{counter++} send movie with imdb id: {movieTmdb.ImdbId}");
+                        if (!string.IsNullOrEmpty(movieTmdb?.ImdbId))
+                        {
+                            movieSubject.OnNext(movieTmdb);
+                        }
                     }
 
                     page++;
@@ -124,9 +141,11 @@ namespace Movies.Clients
 
             MovieTmdb movie = null;
 
-            while (movie == null)
+            HttpResponseMessage response;
+
+            do
             {
-                var response = await _client.GetAsync(path);
+                response = await _client.GetAsync(path);
 
                 if (response.IsSuccessStatusCode && response.Content != null)
                 {
@@ -134,16 +153,12 @@ namespace Movies.Clients
 
                     movie = JsonConvert.DeserializeObject<MovieTmdb>(requestContent);
                 }
-                else
-                {
-                    Console.WriteLine("wtf");
-                }
 
-                if (movie == null)
+                if (response.StatusCode == (HttpStatusCode)429)
                 {
-                    await Task.Delay(1000);
+                    await Task.Delay(3000);
                 }
-            }
+            } while (movie == null && response.StatusCode != HttpStatusCode.NotFound);
 
             return movie;
         }
@@ -151,6 +166,11 @@ namespace Movies.Clients
         protected string FormatPath()
         {
             return GenresEndPoint + "?" + ApiKeyFlag + _token;
+        }
+
+        protected string FormatPath(string imdbId)
+        {
+            return MovieByImdbIdEndPoint.Replace("{" + nameof(imdbId) + "}", imdbId) + "?" + ApiKeyFlag + _token;
         }
 
         protected string FormatPath(int movieId)

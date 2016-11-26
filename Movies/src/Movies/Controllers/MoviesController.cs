@@ -30,7 +30,7 @@ namespace Movies.Controllers
 
             if (movie == null)
             {
-                Task.Factory.StartNew(() => _moviesService.UpdateMoviesByGenre(title));
+                _moviesService.UpdateMoviesByGenre(title);
 
                 return NoContent();
             }
