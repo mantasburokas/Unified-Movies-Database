@@ -2,15 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Movies.Helpers;
 using Movies.Services.Interfaces;
+using System.Linq;
 
 namespace Movies.Controllers
 {
-    [Route("api/movies")]
-    public class MoviesController : Controller
+    public class MoviesByGenreController : Controller
     {
         private readonly IMoviesService _moviesService;
 
-        public MoviesController(IMoviesService moviesService)
+        public MoviesByGenreController(IMoviesService moviesService)
         {
             if (moviesService == null)
             {
@@ -21,19 +21,19 @@ namespace Movies.Controllers
         }
 
         [HttpGet]
-        [Route("{title}", Name = nameof(MovieRoutes.GetMovieByTitle))]
-        public IActionResult GetMovieByTitle(string title)
+        [Route("{genre}", Name = nameof(MovieRoutes.GetMoviesByGenre))]
+        public IActionResult GetMoviesByGenre(string genre)
         {
-            var movie = _moviesService.GetMovieByTitle(title);
+            var movies = _moviesService.GetMoviesByGenre(genre);
 
-            if (movie == null)
+            if (movies == null || !movies.Any())
             {
-                _moviesService.UpdateMoviesByTitle(title);
+                _moviesService.UpdateMoviesByGenre(genre);
 
                 return NoContent();
             }
 
-            return Ok(movie);
+            return Ok(movies);
         }
     }
 }

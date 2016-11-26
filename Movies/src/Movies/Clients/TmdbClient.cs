@@ -27,6 +27,8 @@ namespace Movies.Clients
 
         private const string ExternalIdsFlag = "append_to_response=external_ids";
 
+        private const string ExternalSourceFlag = "external_source=imdb_id";
+
         private readonly HttpClient _client;
 
         private readonly string _token;
@@ -170,7 +172,8 @@ namespace Movies.Clients
 
         protected string FormatPath(string imdbId)
         {
-            return MovieByImdbIdEndPoint.Replace("{" + nameof(imdbId) + "}", imdbId) + "?" + ApiKeyFlag + _token;
+            return MovieByImdbIdEndPoint.Replace("{" + nameof(imdbId) + "}", imdbId)
+                   + "?" + ApiKeyFlag + _token + "&" + ExternalSourceFlag;
         }
 
         protected string FormatPath(int movieId)
