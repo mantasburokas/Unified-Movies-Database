@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Movies.Helpers;
 using Movies.Services.Interfaces;
 using System.Linq;
+using Movies.Models.Entities;
 
 namespace Movies.Controllers
 {
@@ -10,7 +11,9 @@ namespace Movies.Controllers
     {
         private readonly IMoviesService _moviesService;
 
-        public MoviesByGenreController(IMoviesService moviesService)
+        private readonly IMoviesRequestsCache _requestsCache;
+
+        public MoviesByGenreController(IMoviesService moviesService, IMoviesRequestsCache requestsCache)
         {
             if (moviesService == null)
             {
@@ -18,6 +21,7 @@ namespace Movies.Controllers
             }
 
             _moviesService = moviesService;
+            _requestsCache = requestsCache;
         }
 
         [HttpGet]
@@ -26,11 +30,18 @@ namespace Movies.Controllers
         {
             var movies = _moviesService.GetMoviesByGenre(genre);
 
-            if (movies == null || !movies.Any())
+            var requestAdded = _requestsCache.AddRequest(genre);
+                
+            if (requestAdded)
             {
                 _moviesService.UpdateMoviesByGenre(genre);
 
-                return NoContent();
+                return StatusCode(201, movies);
+            }
+
+            if (_requestsCache.IsRequestFinished(genre))
+            {
+                return StatusCode(202, movies);
             }
 
             return Ok(movies);

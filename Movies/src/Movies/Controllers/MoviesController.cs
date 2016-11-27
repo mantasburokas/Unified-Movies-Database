@@ -10,14 +10,22 @@ namespace Movies.Controllers
     {
         private readonly IMoviesService _moviesService;
 
-        public MoviesController(IMoviesService moviesService)
+        private readonly IMoviesRequestsCache _requestsCache;
+
+        public MoviesController(IMoviesService moviesService, IMoviesRequestsCache requestsCache)
         {
             if (moviesService == null)
             {
                 throw new ArgumentNullException(nameof(moviesService));
             }
 
+            if (requestsCache == null)
+            {
+                throw new ArgumentNullException(nameof(requestsCache));
+            }
+
             _moviesService = moviesService;
+            _requestsCache = requestsCache;
         }
 
         [HttpGet]
@@ -28,9 +36,19 @@ namespace Movies.Controllers
 
             if (movie == null)
             {
-                _moviesService.UpdateMoviesByTitle(title);
+                var requestAdded = _requestsCache.AddRequest(title);
 
-                return NoContent();
+                if (requestAdded)
+                {
+                    _moviesService.UpdateMoviesByTitle(title);
+
+                    return NoContent();
+                }
+
+                if (_requestsCache.IsRequestFinished(title))
+                {
+                    return NotFound();
+                }
             }
 
             return Ok(movie);

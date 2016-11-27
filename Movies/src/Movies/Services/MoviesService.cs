@@ -22,10 +22,13 @@ namespace Movies.Services
 
         private readonly IMoviesMapper _moviesMapper;
 
+        private readonly IMoviesRequestsCache _requestsCache;
+
         public MoviesService(IMoviesRepository moviesRepository,
             IOmdbClient omdbClient,
             ITmdbClient tmdbClient,
-            IMoviesMapper moviesMapper)
+            IMoviesMapper moviesMapper,
+            IMoviesRequestsCache requestsCache)
         {
             if (moviesRepository == null)
             {
@@ -47,10 +50,16 @@ namespace Movies.Services
                 throw new ArgumentNullException(nameof(moviesMapper));
             }
 
+            if (requestsCache == null)
+            {
+                throw new ArgumentNullException(nameof(requestsCache));
+            }
+
             _moviesRepository = moviesRepository;
             _omdbClient = omdbClient;
             _tmdbClient = tmdbClient;
             _moviesMapper = moviesMapper;
+            _requestsCache = requestsCache;
         }
 
         public async Task UpdateMoviesByTitle(string title)
@@ -72,8 +81,13 @@ namespace Movies.Services
                     movies.Add(movie);
                 }
 
-                await _moviesRepository.AddMovies(movies);
+                if (movies.Any())
+                { 
+                    await _moviesRepository.AddMovies(movies);
+                }
             }
+
+            _requestsCache.FinishRequest(title);
         }
 
         public Movie GetMovieByTitle(string title)
@@ -107,7 +121,8 @@ namespace Movies.Services
             if (genreInstance != null)
             {
                 _tmdbClient.GetMoviesByGenre(genreInstance.GenreId)
-                    .Do(async movieTmdb => await UpdateMoviesByImdbId(movieTmdb))
+                    .Do(async movieTmdb => await UpdateMoviesByImdbId(movieTmdb),
+                        () => _requestsCache.FinishRequest(genre))
                     .Subscribe();
             }
         }

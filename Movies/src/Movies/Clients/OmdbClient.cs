@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Movies.Clients.Helpers;
 using Movies.Clients.Interfaces;
 using Movies.Models.Dtos;
 using Newtonsoft.Json;
@@ -11,12 +12,6 @@ namespace Movies.Clients
 {
     public class OmdbClient : IOmdbClient
     {
-        private const string TitleFlag = "t=";
-
-        private const string ImdbIdFlag = "i=";
-
-        private const string RottenTomatoesFlag = "tomatoes=true";
-
         private readonly HttpClient _client;
 
         public OmdbClient(string baseUrl)
@@ -32,7 +27,7 @@ namespace Movies.Clients
 
         public async Task<MovieOmdb> GetMovieByTitle(string title)
         {
-            var path = FormatPath(TitleFlag, title);
+            var path = FormatPath(OmdbClientHelper.TitleFlag, title);
 
             var response = await _client.GetAsync(path);
 
@@ -50,7 +45,7 @@ namespace Movies.Clients
 
         public async Task<MovieOmdb> GetMovieByImdbId(string id)
         {
-            var path = FormatPath(ImdbIdFlag, id);
+            var path = FormatPath(OmdbClientHelper.ImdbIdFlag, id);
 
             MovieOmdb movie = null;
 
@@ -76,7 +71,7 @@ namespace Movies.Clients
 
         protected string FormatPath(string flag, string value)
         {
-            return "?" + flag + value + "&" + RottenTomatoesFlag;
+            return "?" + flag + value + "&" + OmdbClientHelper.RottenTomatoesFlag;
         }
     }
 }

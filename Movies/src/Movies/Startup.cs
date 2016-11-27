@@ -49,11 +49,12 @@ namespace Movies
                 .AddSingleton<ITmdbClient>(new TmdbClient(tmdbBaseUrl, tmdbToken))
                 .AddSingleton<IMoviesService, MoviesService>()
                 .AddSingleton<IGenresService, GenresService>()
+                .AddSingleton<IMoviesRequestsCache, MoviesRequestsCache>()
                 .AddSingleton<IGenresMapper, GenresMapper>()
                 .AddSingleton<IMoviesMapper, MoviesMapper>()
                 .AddSingleton<IMoviesDbContextFactory>(new MoviesDbContextFactory(connectionString))
-                .AddTransient<IMoviesRepository, MoviesRepository>();
-        }
+                .AddSingleton<IMoviesRepository, MoviesRepository>();
+            }
 
         public void Configure(IApplicationBuilder app)
         {

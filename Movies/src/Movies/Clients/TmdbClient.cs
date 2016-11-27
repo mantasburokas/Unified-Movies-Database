@@ -8,27 +8,12 @@ using System.Net.Http.Headers;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Movies.Clients.Helpers;
 
 namespace Movies.Clients
 {
     public class TmdbClient : ITmdbClient
     {
-        private const string GenresEndPoint = "genre/movie/list";
-
-        private const string MoviesByGenreEndPoint = "genre/{genreId}/movies";
-
-        private const string MovieByIdEndPoint = "movie/{movieId}";
-
-        private const string MovieByImdbIdEndPoint = "find/{imdbId}";
-
-        private const string ApiKeyFlag = "api_key=";
-
-        private const string PageFlag = "page=";
-
-        private const string ExternalIdsFlag = "append_to_response=external_ids";
-
-        private const string ExternalSourceFlag = "external_source=imdb_id";
-
         private readonly HttpClient _client;
 
         private readonly string _token;
@@ -135,6 +120,8 @@ namespace Movies.Clients
                 }
 
             } while (page <= totalPages);
+
+            movieSubject.OnCompleted();
         }
 
         protected async Task<MovieTmdb> GetMovieById(int id)
@@ -167,25 +154,25 @@ namespace Movies.Clients
 
         protected string FormatPath()
         {
-            return GenresEndPoint + "?" + ApiKeyFlag + _token;
+            return TmdbClientHelper.GenresEndPoint + "?" + TmdbClientHelper.ApiKeyFlag + _token;
         }
 
         protected string FormatPath(string imdbId)
         {
-            return MovieByImdbIdEndPoint.Replace("{" + nameof(imdbId) + "}", imdbId)
-                   + "?" + ApiKeyFlag + _token + "&" + ExternalSourceFlag;
+            return TmdbClientHelper.MovieByImdbIdEndPoint.Replace("{" + nameof(imdbId) + "}", imdbId)
+                   + "?" + TmdbClientHelper.ApiKeyFlag + _token + "&" + TmdbClientHelper.ExternalSourceFlag;
         }
 
         protected string FormatPath(int movieId)
         {
-            return MovieByIdEndPoint.Replace("{" + nameof(movieId) + "}", movieId.ToString())
-                   + "?" + ApiKeyFlag + _token + "&" + ExternalIdsFlag;
+            return TmdbClientHelper.MovieByIdEndPoint.Replace("{" + nameof(movieId) + "}", movieId.ToString())
+                   + "?" + TmdbClientHelper.ApiKeyFlag + _token + "&" + TmdbClientHelper.ExternalIdsFlag;
         }
 
         protected string FormatPath(int genreId, int page)
         {
-            return MoviesByGenreEndPoint.Replace("{" + nameof(genreId) + "}", genreId.ToString())
-                   + "?" + ApiKeyFlag + _token + "&" + PageFlag + page;
+            return TmdbClientHelper.MoviesByGenreEndPoint.Replace("{" + nameof(genreId) + "}", genreId.ToString())
+                   + "?" + TmdbClientHelper.ApiKeyFlag + _token + "&" + TmdbClientHelper.PageFlag + page;
         }
     }
 }
