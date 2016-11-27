@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Movies.Models;
+using Movies.Models.Dtos;
 
 namespace Movies.Services.Interfaces
 {

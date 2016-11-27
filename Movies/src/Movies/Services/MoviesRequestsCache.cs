@@ -10,6 +10,8 @@ namespace Movies.Services
 {
     public class MoviesRequestsCache : IMoviesRequestsCache
     {
+        private readonly TimeSpan _cachedPeriod = TimeSpan.FromDays(1);
+
         private readonly IDictionary<MovieRequest, MoviesRequestsStates> _cache;
 
         public MoviesRequestsCache()
@@ -91,7 +93,7 @@ namespace Movies.Services
         {
             var cleared = false;
 
-            if (request.Created + TimeSpan.FromDays(1) < DateTime.UtcNow)
+            if (request.Created + _cachedPeriod < DateTime.UtcNow)
             {
                 cleared = _cache.Remove(request);
             }

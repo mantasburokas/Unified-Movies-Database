@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
-using Movies.Mappers.Interfaces;
-using Movies.Models;
+﻿using Movies.Mappers.Interfaces;
 using Movies.Models.Dtos;
+using Movies.Models.Pocos;
+using System.Collections.Generic;
 using Genre = Movies.Models.Dtos.Genre;
+using MovieDto = Movies.Models.Dtos.Movie;
+using MoviePoco = Movies.Models.Pocos.Movie;
 
 namespace Movies.Mappers
 {
     public class MoviesMapper : IMoviesMapper
     {
-        public Movie Map(MovieTmdb movieTmdb, MovieOmdb movieOmdb)
+        public MoviePoco Map(MovieTmdb movieTmdb, MovieOmdb movieOmdb)
         {
             var movieGenres = new List<MovieGenre>();
 
@@ -24,7 +26,7 @@ namespace Movies.Mappers
                 movieGenres.Add(movieGenre);
             }
 
-            var movie = new Movie
+            var movie = new MoviePoco
             {
                 Title = movieOmdb.Title,
                 Released = movieOmdb.Released,
@@ -32,6 +34,34 @@ namespace Movies.Mappers
                 Metascore = movieOmdb.Metascore,
                 TomatoMeter = movieOmdb.TomatoMeter,
                 MovieGenres = movieGenres
+            };
+
+            return movie;
+        }
+
+        public ICollection<MovieDto> Map(ICollection<MoviePoco> moviePocos)
+        {
+            var movies = new List<MovieDto>();
+
+            foreach (var movie in moviePocos)
+            {
+                var movieDto = Map(movie);
+
+                movies.Add(movieDto);
+            }
+
+            return movies;
+        }
+
+        public MovieDto Map(MoviePoco moviePoco)
+        {
+            var movie = new MovieDto
+            {
+                Title = moviePoco.Title,
+                Released = moviePoco.Released,
+                ImdbRating = moviePoco.ImdbRating,
+                Metascore = moviePoco.Metascore,
+                TomatoMeter = moviePoco.TomatoMeter
             };
 
             return movie;

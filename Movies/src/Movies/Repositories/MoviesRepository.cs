@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Movies.Contexts.Interfaces;
+using Movies.Models.Pocos;
+using Movies.Repositories.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Movies.Contexts.Interfaces;
-using Movies.Models;
-using Movies.Repositories.Interfaces;
 
 namespace Movies.Repositories
 {
@@ -60,7 +60,7 @@ namespace Movies.Repositories
         {
             using (var db = _dbFactory.Create())
             {
-                return db.Movies.Where(m => m.MovieGenres.All(mg => mg.Genre.Name == genre)).ToList();
+                return db.Movies.Where(m => m.MovieGenres.FirstOrDefault(mg => mg.Genre.Name == genre) != null).ToList();
             }
         }
 

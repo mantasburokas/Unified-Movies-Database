@@ -1,6 +1,5 @@
 ﻿using Movies.Clients.Interfaces;
 using Movies.Mappers.Interfaces;
-using Movies.Models;
 using Movies.Models.Dtos;
 using Movies.Repositories.Interfaces;
 using Movies.Services.Interfaces;
@@ -9,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using MovieDto = Movies.Models.Dtos.Movie;
+using MoviePoco = Movies.Models.Pocos.Movie;
 
 namespace Movies.Services
 {
@@ -70,7 +71,7 @@ namespace Movies.Services
             {
                 var moviesTmdb = await _tmdbClient.GetMoviesByImdbId(movieOmdb.ImdbId);
 
-                var movies = new List<Movie>();
+                var movies = new List<MoviePoco>();
 
                 foreach (var movieByGenre in moviesTmdb.MoviesByGenre)
                 {
@@ -90,9 +91,18 @@ namespace Movies.Services
             _requestsCache.FinishRequest(title);
         }
 
-        public Movie GetMovieByTitle(string title)
+        public MovieDto GetMovieByTitle(string title)
         {
-            return _moviesRepository.GetMovieByTitle(title);
+            var movie =  _moviesRepository.GetMovieByTitle(title);
+
+            MovieDto movieDto = null;
+
+            if (movie != null)
+            {
+                movieDto = _moviesMapper.Map(movie);
+            }
+
+            return movieDto;
         }
 
         protected async Task UpdateMoviesByImdbId(MovieTmdb movieTmdb)
@@ -109,7 +119,7 @@ namespace Movies.Services
             }
         }
 
-        protected void RemoveUnkownGenres(Movie movie)
+        protected void RemoveUnkownGenres(MoviePoco movie)
         {
             movie.MovieGenres = movie.MovieGenres.Where(mg => _moviesRepository.GetGenre(mg.GenreId) != null).ToList();
         }
@@ -127,9 +137,18 @@ namespace Movies.Services
             }
         }
 
-        public ICollection<Movie> GetMoviesByGenre(string genre)
+        public ICollection<MovieDto> GetMoviesByGenre(string genre)
         {
-            return _moviesRepository.GetMoviesByGenre(genre);
+            var movies = _moviesRepository.GetMoviesByGenre(genre);
+
+            ICollection<MovieDto> movieDtos = null;
+
+            if (movies != null && movies.Any())
+            {
+                movieDtos = _moviesMapper.Map(movies);
+            }
+
+            return movieDtos;
         }
     }
 }

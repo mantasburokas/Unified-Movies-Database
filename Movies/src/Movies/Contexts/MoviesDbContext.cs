@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Movies.Models;
+using Movies.Models.Pocos;
 
 namespace Movies.Contexts
 {

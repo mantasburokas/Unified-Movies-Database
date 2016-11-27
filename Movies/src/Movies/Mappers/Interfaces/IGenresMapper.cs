@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Movies.Models.Dtos;
-using GenrePoco = Movies.Models.Genre;
+using GenrePoco = Movies.Models.Pocos.Genre;
 using GenreDto = Movies.Models.Dtos.Genre;
 
 namespace Movies.Mappers.Interfaces

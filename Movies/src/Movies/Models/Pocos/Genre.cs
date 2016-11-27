@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Movies.Models
+namespace Movies.Models.Pocos
 {
     public class Genre
     {

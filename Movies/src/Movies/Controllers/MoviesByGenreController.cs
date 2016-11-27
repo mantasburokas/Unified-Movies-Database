@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Movies.Helpers;
 using Movies.Services.Interfaces;
-using System.Linq;
-using Movies.Models.Entities;
 
 namespace Movies.Controllers
 {
