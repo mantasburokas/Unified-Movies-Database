@@ -3,9 +3,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { ProgressbarModule } from 'ng2-bootstrap/ng2-bootstrap';
-
 import { AppComponent } from './app.component';
+
+import { OVERLAY_PROVIDERS } from '@angular2-material/core';
+import { MdButtonModule } from '@angular2-material/button';
+import { MdInputModule } from '@angular2-material/input';
+import { MdMenuModule } from '@angular2-material/menu';
+import { MdIconModule, MdIconRegistry } from '@angular2-material/icon';
 
 @NgModule({
   declarations: [
@@ -15,9 +19,14 @@ import { AppComponent } from './app.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-    ProgressbarModule
+    MdButtonModule,
+    MdInputModule,
+    MdMenuModule,
+    MdIconModule
   ],
-  providers: [],
+  providers: [OVERLAY_PROVIDERS, MdIconRegistry],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {
+}
