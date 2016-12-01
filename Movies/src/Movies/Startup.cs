@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Movies.Clients;
@@ -34,6 +33,8 @@ namespace Movies
         {
             services.AddMvc();
 
+            services.AddCors();
+
             services.AddSwaggerGen();
 
             var omdbBaseUrl = Configuration["OmdbApiUrl:Url"];
@@ -63,6 +64,8 @@ namespace Movies
             app.UseSwagger();
 
             app.UseSwaggerUi();
+
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
         }
     }
 }

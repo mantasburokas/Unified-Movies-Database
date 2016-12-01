@@ -10,6 +10,7 @@ import { MdButtonModule } from '@angular2-material/button';
 import { MdInputModule } from '@angular2-material/input';
 import { MdMenuModule } from '@angular2-material/menu';
 import { MdIconModule, MdIconRegistry } from '@angular2-material/icon';
+import {GenreService} from "./services/genre.service";
 
 @NgModule({
   declarations: [
@@ -24,8 +25,14 @@ import { MdIconModule, MdIconRegistry } from '@angular2-material/icon';
     MdMenuModule,
     MdIconModule
   ],
-  providers: [OVERLAY_PROVIDERS, MdIconRegistry],
-  bootstrap: [AppComponent]
+  providers: [
+    OVERLAY_PROVIDERS,
+    MdIconRegistry,
+    GenreService
+  ],
+  bootstrap: [
+    AppComponent
+  ]
 })
 
 export class AppModule {
