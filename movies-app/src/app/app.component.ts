@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
 
   protected genres: Genre[];
 
-  protected genre: string;
+  protected selectedGenreName: string;
 
   constructor (private genreService: GenreService) {
 
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  protected setGenreInput(genre: string): void {
-    this.genre = genre;
+  protected setGenreInput(genreName: string): void {
+    this.selectedGenreName = genreName;
   }
 }

@@ -13,10 +13,9 @@ export class GenreService {
   }
 
   public getGenres() : Observable<Genre[]> {
-    let genres = this.http.get(this.genresUrl)
+    let observable = this.http.get(this.genresUrl)
       .map((res:Response) => res.json())
       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
-
-    return genres;
+    return observable;
   }
 }
