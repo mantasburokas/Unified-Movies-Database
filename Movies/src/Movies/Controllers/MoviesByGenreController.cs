@@ -5,6 +5,7 @@ using Movies.Services.Interfaces;
 
 namespace Movies.Controllers
 {
+    [Route("api/movies/genre")]
     public class MoviesByGenreController : Controller
     {
         private readonly IMoviesService _moviesService;

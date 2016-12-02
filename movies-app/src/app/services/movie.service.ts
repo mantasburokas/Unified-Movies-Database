@@ -2,19 +2,19 @@ import {Http, Response} from "@angular/http";
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 
-import {Genre} from "../models/genre";
+import {Movie} from "../models/movie";
 
 @Injectable()
-export class GenreService {
+export class MovieService {
 
-  private genresUrl = "http://localhost:5000/api/genres";
+  private moviesByGenreUrl = "http://localhost:5000/api/movies/genre/";
 
   constructor (private http: Http) {
 
   }
 
-  public getGenres() : Observable<Genre[]> {
-    let observable = this.http.get(this.genresUrl)
+  public getMoviesByGenre(genre: string) : Observable<Movie[]> {
+    let observable = this.http.get(this.moviesByGenreUrl + genre)
       .map((res:Response) => res.json())
       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 

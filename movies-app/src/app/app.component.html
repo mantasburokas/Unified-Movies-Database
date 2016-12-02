@@ -1,5 +1,5 @@
 <md-input placeholder="Title"></md-input>
-<button md-raised-button color="warn">
+<button md-raised-button color="warn" (click)="search(selectedGenreName)">
   <md-icon>search</md-icon>
 </button><br>
 
@@ -16,3 +16,5 @@
 <md-input placeholder="IMDB user score"></md-input><br>
 <md-input placeholder="Metacritic core"></md-input><br>
 <md-input placeholder="Tomatometer score"></md-input>
+
+<app-movie *ngIf="showMovies"></app-movie>
