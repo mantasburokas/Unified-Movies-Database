@@ -1,20 +1,18 @@
-<md-input placeholder="Title"></md-input>
-<button md-raised-button color="warn" (click)="search(selectedGenreName)">
-  <md-icon>search</md-icon>
-</button><br>
+<app-search ></app-search>
 
-<md-input placeholder="Select genre" [value]="selectedGenreName" disabled></md-input>
 
-<button md-icon-button [md-menu-trigger-for]="menu">
-  <md-icon>more_vert</md-icon>
-</button>
+<!--<md-input placeholder="Select genre" [value]="selectedGenreName" disabled></md-input>-->
 
-<md-menu #menu="mdMenu">
-  <button md-menu-item *ngFor="let genre of genres" (click)="setGenreInput(genre.name)">{{genre.name}}</button>
-</md-menu><br>
+<!--<button md-icon-button [md-menu-trigger-for]="menu">-->
+  <!--<md-icon>more_vert</md-icon>-->
+<!--</button>-->
 
-<md-input placeholder="IMDB user score"></md-input><br>
-<md-input placeholder="Metacritic core"></md-input><br>
-<md-input placeholder="Tomatometer score"></md-input>
+<!--<md-menu #menu="mdMenu">-->
+  <!--<button md-menu-item *ngFor="let genre of genres" (click)="setGenreInput(genre.name)">{{genre.name}}</button>-->
+<!--</md-menu><br>-->
 
-<app-movie *ngIf="showMovies"></app-movie>
+<!--<md-input placeholder="IMDB user score"></md-input><br>-->
+<!--<md-input placeholder="Metacritic core"></md-input><br>-->
+<!--<md-input placeholder="Tomatometer score"></md-input>-->
+
+<!--<app-movie *ngIf="showMovies"></app-movie>-->

@@ -51,10 +51,6 @@ namespace Movies.Contexts
             #endregion
 
             modelBuilder.Entity<Movie>()
-                .HasIndex(m => m.Title)
-                .IsUnique(false);
-
-            modelBuilder.Entity<Movie>()
                 .HasIndex(m => m.ImdbRating)
                 .IsUnique(false);
 
@@ -65,6 +61,10 @@ namespace Movies.Contexts
             modelBuilder.Entity<Movie>()
                 .HasIndex(m => m.TomatoMeter)
                 .IsUnique(false);
+
+            modelBuilder.Entity<Genre>()
+                .HasIndex(g => g.Name)
+                .IsUnique();
         }
     }
 }

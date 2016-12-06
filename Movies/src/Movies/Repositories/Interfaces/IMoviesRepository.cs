@@ -10,7 +10,7 @@ namespace Movies.Repositories.Interfaces
 
         Task AddMovie(Movie movie);
 
-        ICollection<Movie> GetMoviesByGenre(string genre);
+        Task<ICollection<Movie>> GetMoviesByGenre(string genre);
             
         Movie GetMovieByTitle(string title);
 

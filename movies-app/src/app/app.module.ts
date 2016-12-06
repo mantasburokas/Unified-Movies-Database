@@ -18,11 +18,15 @@ import {GenreService} from "./services/genre.service";
 import {MovieService} from "./services/movie.service";
 
 import {SearchEmitter} from "./emitters/search.emitter";
+import { SearchComponent } from './search/search.component';
+import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MovieComponent
+    MovieComponent,
+    SearchComponent,
+    AdvancedSearchComponent
   ],
   imports: [
     BrowserModule,

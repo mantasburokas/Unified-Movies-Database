@@ -33,9 +33,17 @@ namespace Movies.Repositories
 
                     if (!movieExists)
                     {
-                        db.Movies.Add(movie);
+                        try
+                        {
+                            db.Movies.Add(movie);
 
-                        await db.SaveChangesAsync();
+                            await db.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                        }
                     }
                 }
             }
@@ -49,18 +57,46 @@ namespace Movies.Repositories
 
                 if (!movieExists && movie.Title != null)
                 {
-                    db.Movies.Add(movie);
+                    try
+                    {
+                        db.Movies.Add(movie);
 
-                    await db.SaveChangesAsync();
+                        await db.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
         }
 
-        public ICollection<Movie> GetMoviesByGenre(string genre)
+        public async Task<ICollection<Movie>> GetMoviesByGenre(string genreName)
         {
             using (var db = _dbFactory.Create())
             {
-                return db.Movies.Where(m => m.MovieGenres.FirstOrDefault(mg => mg.Genre.Name == genre) != null).ToList();
+                ICollection<Movie> movies = null;
+
+                try
+                {
+                    var genre = await db.Genres.SingleOrDefaultAsync(g => g.Name == genreName);
+
+                    var genreId = genre?.GenreId;
+
+                    genre = await db.Genres.Include(g => g.MovieGenres)
+                        .ThenInclude(mg => mg.Movie)
+                        .SingleOrDefaultAsync(g => g.GenreId == genreId);
+
+                    movies = genre.MovieGenres.Select(mg => mg.Movie).ToList();
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ex.Message);
+                }
+
+                return movies;
             }
         }
 
@@ -68,7 +104,19 @@ namespace Movies.Repositories
         {
             using (var db = _dbFactory.Create())
             {
-                return db.Movies.SingleOrDefault(m => m.Title == title);
+                Movie movie = null;
+
+                try
+                {
+                    movie = db.Movies.SingleOrDefault(m => m.Title == title);
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ex.Message);
+                }
+
+                return movie;
             }
         }
 
@@ -92,10 +140,22 @@ namespace Movies.Repositories
 
         public Genre GetGenre(string name)
         {
+            Genre genre = null;
+
             using (var db = _dbFactory.Create())
             {
-                return db.Genres.SingleOrDefault(g => g.Name == name);
+                try
+                {
+                    genre = db.Genres.SingleOrDefault(g => g.Name == name);
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ex.Message);
+                }
             }
+
+            return genre;
         }
 
         public Genre GetGenre(int id)

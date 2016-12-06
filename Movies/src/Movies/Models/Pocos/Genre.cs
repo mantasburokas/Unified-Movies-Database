@@ -9,6 +9,7 @@ namespace Movies.Models.Pocos
         public int GenreId { get; set; }
 
         [Required]
+        [MaxLength(64)]
         public string Name { get; set; }
 
         #region Relationships

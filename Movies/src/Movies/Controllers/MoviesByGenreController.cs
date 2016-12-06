@@ -38,7 +38,7 @@ namespace Movies.Controllers
                 return StatusCode(201, movies);
             }
 
-            if (_requestsCache.IsRequestFinished(genre))
+            if (!_requestsCache.IsRequestFinished(genre))
             {
                 return StatusCode(202, movies);
             }

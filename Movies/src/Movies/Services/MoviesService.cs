@@ -139,7 +139,7 @@ namespace Movies.Services
 
         public ICollection<MovieDto> GetMoviesByGenre(string genre)
         {
-            var movies = _moviesRepository.GetMoviesByGenre(genre);
+            var movies = _moviesRepository.GetMoviesByGenre(genre).Result;
 
             ICollection<MovieDto> movieDtos = null;
 

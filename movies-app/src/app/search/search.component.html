@@ -1,0 +1,14 @@
+<div class="center-block" style="max-width: 30%; margin-top: 5%;">
+  <md-input style="width: calc(100% - 90px)" placeholder="Title"></md-input>
+
+  <button md-icon-button (click)="showAdvancedSearch()">
+    <md-icon>keyboard_arrow_down</md-icon>
+  </button>
+
+  <button md-mini-fab color="primary" (click)="search(selectedGenreName)">
+    <md-icon>search</md-icon>
+  </button>
+  <br>
+
+  <app-advanced-search *ngIf="advancedSearchVisible"></app-advanced-search>
+</div>
