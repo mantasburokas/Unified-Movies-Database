@@ -1,18 +1,9 @@
-<app-search ></app-search>
+<div id="container" class="row text-center">
+  <div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
+    <app-search></app-search>
 
-
-<!--<md-input placeholder="Select genre" [value]="selectedGenreName" disabled></md-input>-->
-
-<!--<button md-icon-button [md-menu-trigger-for]="menu">-->
-  <!--<md-icon>more_vert</md-icon>-->
-<!--</button>-->
-
-<!--<md-menu #menu="mdMenu">-->
-  <!--<button md-menu-item *ngFor="let genre of genres" (click)="setGenreInput(genre.name)">{{genre.name}}</button>-->
-<!--</md-menu><br>-->
-
-<!--<md-input placeholder="IMDB user score"></md-input><br>-->
-<!--<md-input placeholder="Metacritic core"></md-input><br>-->
-<!--<md-input placeholder="Tomatometer score"></md-input>-->
-
-<!--<app-movie *ngIf="showMovies"></app-movie>-->
+    <div id="movies-container">
+      <app-movie></app-movie>
+    </div>
+  </div>
+</div>

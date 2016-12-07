@@ -1,11 +1,11 @@
-<div class="center-block" style="max-width: 30%; margin-top: 5%;">
-  <md-input style="width: calc(100% - 90px)" placeholder="Title"></md-input>
+<div class="center-block">
+  <md-input id="title-input" placeholder="Title" [disabled]="isInputDisabled" [(ngModel)]="title"></md-input>
 
   <button md-icon-button (click)="showAdvancedSearch()">
     <md-icon>keyboard_arrow_down</md-icon>
   </button>
 
-  <button md-mini-fab color="primary" (click)="search(selectedGenreName)">
+  <button md-mini-fab color="primary" (click)="findMovie()">
     <md-icon>search</md-icon>
   </button>
   <br>

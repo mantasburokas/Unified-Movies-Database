@@ -1,5 +1,12 @@
-<accordion [closeOthers]="oneAtATime">
-  <accordion-group *ngFor="let movie of movies" [heading]="movie.title">
-    {{movie | json}}
+<md-progress-circle *ngIf="inProgress" mode="indeterminate" color="primary"></md-progress-circle>
+
+
+<accordion *ngIf="movies || movie" [closeOthers]="oneAtATime">
+  <accordion-group *ngFor="let m of movies" [heading]="m.title">
+    {{m | json}}
+  </accordion-group>
+
+  <accordion-group [heading]="movie.title">
+    {{movie || json}}
   </accordion-group>
 </accordion>

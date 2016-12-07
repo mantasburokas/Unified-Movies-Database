@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+md-input .md-input-placeholder {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: normal;
+}
+
+.ng2-dropdown-container {
+  margin-top: 10px;
+}
+
+.panel-default > .panel-heading {
+  background-color: #009688 !important;
+}
+
+.panel-title {
+  color: white !important;
+}

@@ -1,3 +1,8 @@
 .center-block > * {
   vertical-align: middle;
 }
+
+#title-input {
+  width: calc(100% - 90px);
+  min-width: 200px;
+}

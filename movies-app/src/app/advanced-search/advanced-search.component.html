@@ -1,3 +1,32 @@
-<p>
-  advanced-search works!
-</p>
+<md-card>
+  <div class="row text-center">
+    <div class="col-md-8">
+    <ng2-dropdown>
+      <ng2-dropdown-button>
+        {{selectedGenre}}
+      </ng2-dropdown-button>
+      <ng2-dropdown-menu>
+        <ng2-menu-item *ngFor="let genre of genres" (click)="setSelectedGenre(genre.name)">
+          {{genre.name}}
+        </ng2-menu-item>
+      </ng2-dropdown-menu>
+    </ng2-dropdown>
+    </div>
+
+    <div class="col-md-4">
+    <md-input placeholder="Votes"></md-input>
+    </div>
+  </div>
+
+  <div class="row text-center">
+    <div class="col-md-4">
+      <md-input placeholder="Imdb"></md-input>
+    </div>
+    <div class="col-md-4">
+      <md-input placeholder="Tomatometer"></md-input>
+    </div>
+    <div class="col-md-4">
+      <md-input placeholder="Metacritic"></md-input>
+    </div>
+  </div>
+</md-card>

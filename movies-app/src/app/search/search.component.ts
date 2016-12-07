@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import {Search} from "../models/search";
+
+import {SearchEmitter} from "../emitters/search.emitter";
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -7,24 +11,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchComponent implements OnInit {
 
-  protected showMovies: boolean = false;
+  protected isInputDisabled: boolean = false;
 
   protected advancedSearchVisible: boolean = false;
 
-  constructor() { }
+  protected title: string;
 
-  ngOnInit() {
+  constructor(private searchEmitter: SearchEmitter) {
+
   }
 
-  protected search() : void {
-    this.showMovies = true;
+  ngOnInit() {
+
   }
 
   protected showAdvancedSearch(): void {
     if (this.advancedSearchVisible) {
       this.advancedSearchVisible = false;
+
+      this.isInputDisabled = false;
     } else {
       this.advancedSearchVisible = true;
+
+      this.isInputDisabled = true;
     }
+  }
+
+  protected findMovie(): void {
+    this.searchEmitter.getSubject().next(new Search(this.title));
   }
 }

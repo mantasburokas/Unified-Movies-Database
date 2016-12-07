@@ -11,15 +11,20 @@ import { MdButtonModule } from '@angular2-material/button';
 import { MdInputModule } from '@angular2-material/input';
 import { MdMenuModule } from '@angular2-material/menu';
 import { MdIconModule, MdIconRegistry } from '@angular2-material/icon';
+import { MdCardModule } from '@angular2-material/card';
+import { Ng2DropdownModule } from 'ng2-material-dropdown';
+import { MdProgressCircleModule } from "@angular2-material/progress-circle";
 
-import {AccordionModule} from "ng2-bootstrap";
+import { AccordionModule } from "ng2-bootstrap";
 
 import {GenreService} from "./services/genre.service";
 import {MovieService} from "./services/movie.service";
 
 import {SearchEmitter} from "./emitters/search.emitter";
 import { SearchComponent } from './search/search.component';
+
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
+import {AdvancedSearchEmitter} from "./emitters/avanced.search.emitter";
 
 @NgModule({
   declarations: [
@@ -36,6 +41,9 @@ import { AdvancedSearchComponent } from './advanced-search/advanced-search.compo
     MdInputModule,
     MdMenuModule,
     MdIconModule,
+    MdCardModule,
+    MdProgressCircleModule,
+    Ng2DropdownModule,
     AccordionModule
   ],
   providers: [
@@ -43,7 +51,8 @@ import { AdvancedSearchComponent } from './advanced-search/advanced-search.compo
     MdIconRegistry,
     GenreService,
     MovieService,
-    SearchEmitter
+    SearchEmitter,
+    AdvancedSearchEmitter
   ],
   bootstrap: [
     AppComponent
