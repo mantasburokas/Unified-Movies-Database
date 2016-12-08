@@ -69,10 +69,14 @@ export class MovieComponent implements OnInit {
   protected search(searchParams: Search) {
     this.inProgress = true;
 
+    this.movie = null;
+
+    this.movies = null;
+
     this.movieService.getMovieByTitle(searchParams.title).subscribe(
       movie => {
         if (movie.status == 204) {
-          setTimeout(this.search(searchParams), 1000);
+          setTimeout(() => this.search(searchParams), 1000);
         } else if (movie.status == 404) {
           this.inProgress = false;
         } else {

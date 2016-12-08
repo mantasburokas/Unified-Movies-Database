@@ -11,4 +11,10 @@
   <br>
 
   <app-advanced-search *ngIf="advancedSearchVisible"></app-advanced-search>
+
+  <div id="alert">
+    <alert type="danger" *ngIf="showAlert">
+      <strong>Title or genre must be not empty</strong>
+    </alert>
+  </div>
 </div>

@@ -17,6 +17,8 @@ export class SearchComponent implements OnInit {
 
   protected title: string;
 
+  protected showAlert: boolean = false;
+
   constructor(private searchEmitter: SearchEmitter) {
 
   }
@@ -38,6 +40,14 @@ export class SearchComponent implements OnInit {
   }
 
   protected findMovie(): void {
-    this.searchEmitter.getSubject().next(new Search(this.title));
+    if (this.title != null) {
+      this.searchEmitter.getSubject().next(new Search(this.title));
+
+      this.title = null;
+
+      this.showAlert = false;
+    } else {
+      this.showAlert = true;
+    }
   }
 }

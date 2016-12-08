@@ -15,16 +15,16 @@ import { MdCardModule } from '@angular2-material/card';
 import { Ng2DropdownModule } from 'ng2-material-dropdown';
 import { MdProgressCircleModule } from "@angular2-material/progress-circle";
 
-import { AccordionModule } from "ng2-bootstrap";
+import { AccordionModule, AlertModule } from "ng2-bootstrap";
 
-import {GenreService} from "./services/genre.service";
-import {MovieService} from "./services/movie.service";
+import { GenreService } from "./services/genre.service";
+import { MovieService } from "./services/movie.service";
 
-import {SearchEmitter} from "./emitters/search.emitter";
+import { SearchEmitter } from "./emitters/search.emitter";
 import { SearchComponent } from './search/search.component';
 
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
-import {AdvancedSearchEmitter} from "./emitters/avanced.search.emitter";
+import { AdvancedSearchEmitter } from "./emitters/avanced.search.emitter";
 
 @NgModule({
   declarations: [
@@ -44,7 +44,8 @@ import {AdvancedSearchEmitter} from "./emitters/avanced.search.emitter";
     MdCardModule,
     MdProgressCircleModule,
     Ng2DropdownModule,
-    AccordionModule
+    AccordionModule,
+    AlertModule
   ],
   providers: [
     OVERLAY_PROVIDERS,
