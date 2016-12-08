@@ -67,7 +67,7 @@ namespace Movies.Services
         {
             var movieOmdb = await _omdbClient.GetMovieByTitle(title);
 
-            if (movieOmdb != null)
+            if (movieOmdb != null && movieOmdb.ImdbId != null)
             {
                 var moviesTmdb = await _tmdbClient.GetMoviesByImdbId(movieOmdb.ImdbId);
 

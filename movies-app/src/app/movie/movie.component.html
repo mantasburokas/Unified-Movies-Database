@@ -10,3 +10,10 @@
     {{movie || json}}
   </accordion-group>
 </accordion>
+
+
+<div id="movie-not-found-alert">
+  <alert type="danger" *ngIf="showAlert">
+    <strong>Movie not found</strong>
+  </alert>
+</div>

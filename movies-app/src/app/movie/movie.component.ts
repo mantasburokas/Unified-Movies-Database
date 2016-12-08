@@ -26,6 +26,8 @@ export class MovieComponent implements OnInit {
 
   protected inProgress: boolean = false;
 
+  protected showAlert: boolean = false;
+
   constructor(private movieService: MovieService, private searchEmitter: SearchEmitter, private advancedSearchEmitter: AdvancedSearchEmitter) {
     searchEmitter.getObservable().subscribe(
       searchParams => {
@@ -73,12 +75,12 @@ export class MovieComponent implements OnInit {
 
     this.movies = null;
 
+    this.showAlert = false;
+
     this.movieService.getMovieByTitle(searchParams.title).subscribe(
       movie => {
         if (movie.status == 204) {
           setTimeout(() => this.search(searchParams), 1000);
-        } else if (movie.status == 404) {
-          this.inProgress = false;
         } else {
           this.movie = movie.json();
 
@@ -88,7 +90,13 @@ export class MovieComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        if (err.status == 404) {
+          this.inProgress = false;
+
+          this.showAlert = true;
+        } else {
+          console.log(err);
+        }
       }
     );
   }
