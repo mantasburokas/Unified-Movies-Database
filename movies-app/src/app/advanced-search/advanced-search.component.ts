@@ -35,7 +35,7 @@ export class AdvancedSearchComponent implements OnInit {
     this.selectedGenre = genre;
   }
 
-  protected findMovie(): void {
-    this.advancedSearchEmitter.getSubject().next();
+  public findMovie() : void {
+    console.log("asd");
   }
 }

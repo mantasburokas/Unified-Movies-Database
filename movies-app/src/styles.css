@@ -16,3 +16,8 @@ md-input .md-input-placeholder {
 .panel-title {
   color: white !important;
 }
+
+input {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}

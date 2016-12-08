@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 
 import {Search} from "../models/search";
 
 import {SearchEmitter} from "../emitters/search.emitter";
+
+import {AdvancedSearchComponent} from "../advanced-search/advanced-search.component";
 
 @Component({
   selector: 'app-search',
@@ -10,6 +12,8 @@ import {SearchEmitter} from "../emitters/search.emitter";
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+
+  @ViewChild(AdvancedSearchComponent) advancedSearch: AdvancedSearchComponent;
 
   protected isInputDisabled: boolean = false;
 
@@ -40,14 +44,10 @@ export class SearchComponent implements OnInit {
   }
 
   protected findMovie(): void {
-    if (this.title != null) {
+    if (!this.advancedSearchVisible) {
       this.searchEmitter.getSubject().next(new Search(this.title));
-
-      this.title = null;
-
-      this.showAlert = false;
     } else {
-      this.showAlert = true;
+      this.advancedSearch.findMovie();
     }
   }
 }

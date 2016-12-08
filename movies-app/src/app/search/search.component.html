@@ -1,20 +1,23 @@
 <div class="center-block">
-  <md-input id="title-input" placeholder="Title" [disabled]="isInputDisabled" [(ngModel)]="title"></md-input>
+  <form (ngSubmit)="findMovie()">
+    <md-input id="title-input" placeholder="Title" required [disabled]="isInputDisabled" [(ngModel)]="title" name="title">
+    </md-input>
 
-  <button md-icon-button (click)="showAdvancedSearch()">
-    <md-icon>keyboard_arrow_down</md-icon>
-  </button>
+    <button md-icon-button type="button" (click)="showAdvancedSearch()">
+      <md-icon>keyboard_arrow_down</md-icon>
+    </button>
 
-  <button md-mini-fab color="primary" (click)="findMovie()">
-    <md-icon>search</md-icon>
-  </button>
-  <br>
+    <button md-mini-fab color="primary">
+      <md-icon>search</md-icon>
+    </button>
+    <br>
 
-  <app-advanced-search *ngIf="advancedSearchVisible"></app-advanced-search>
+    <app-advanced-search *ngIf="advancedSearchVisible"></app-advanced-search>
+  </form>
+</div>
 
-  <div id="alert">
-    <alert type="danger" *ngIf="showAlert">
-      <strong>Title or genre must be not empty</strong>
-    </alert>
-  </div>
+<div id="alert">
+  <alert type="danger" *ngIf="showAlert">
+    <strong>Title or genre must be not empty</strong>
+  </alert>
 </div>
