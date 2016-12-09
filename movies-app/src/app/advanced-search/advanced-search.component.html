@@ -14,27 +14,23 @@
     </div>
 
     <div class="col-md-4">
-      <md-input placeholder="Votes" type="number" min="0">
-        {{votes}}
+      <md-input placeholder="Votes" type="number" min="0" [(ngModel)]="votes">
       </md-input>
     </div>
   </div>
 
   <div class="row text-center">
     <div class="col-md-4">
-      <md-input placeholder="Imdb" type="number" min="0" max="10">
-        {{imdb}}
+      <md-input placeholder="Imdb" type="number" min="0" max="10" [(ngModel)]="imdb">
       </md-input>
     </div>
     <div class="col-md-4">
-      <md-input placeholder="Tomatometer" type="number" min="0" max="100">
-        {{tomatometer}}
+      <md-input placeholder="Tomatometer" type="number" min="0" max="100" [(ngModel)]="tomatometer">
         <span md-suffix>%</span>
       </md-input>
     </div>
     <div class="col-md-4">
-      <md-input placeholder="Metacritic" type="number" min="0" max="100">
-        {{metacritic}}
+      <md-input placeholder="Metacritic" type="number" min="0" max="100" [(ngModel)]="metacritic">
       </md-input>
     </div>
   </div>

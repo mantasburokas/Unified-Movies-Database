@@ -21,7 +21,7 @@ import {AdvancedSearch} from "../models/advanced.search";
 
 export class MovieComponent implements OnInit {
 
-  protected movies: Movie[];
+  protected movies: Movie[] = new Array<Movie>();
 
   protected movie: Movie;
 
@@ -31,9 +31,13 @@ export class MovieComponent implements OnInit {
 
   protected parameters: AdvancedSearch;
 
+  protected scrolledFlag: boolean = false;
+
   constructor(private movieService: MovieService, private searchEmitter: SearchEmitter, private advancedSearchEmitter: AdvancedSearchEmitter) {
     searchEmitter.getObservable().subscribe(
       searchParams => {
+        this.reset();
+
         this.search(searchParams);
       },
       err => {
@@ -43,12 +47,26 @@ export class MovieComponent implements OnInit {
 
     advancedSearchEmitter.getObservable().subscribe(
       advancedSearchParams => {
+        this.reset();
+
         this.advancedSearch(advancedSearchParams);
       },
       err => {
         console.log(err)
       }
     );
+  }
+
+  protected reset(): void {
+    this.inProgress = true;
+
+    this.movies = new Array<Movie>();
+
+    this.movie = null;
+
+    this.showAlert = false;
+
+    this.scrolledFlag = false;
   }
 
   ngOnInit() {
@@ -58,23 +76,22 @@ export class MovieComponent implements OnInit {
   protected advancedSearch(advancedSearchParams: AdvancedSearch) {
     this.inProgress = true;
 
-    this.movie = null;
-
-    this.showAlert = false;
-
-    let path = "?from=0"
+    let path = "?from=" + this.movies.length
           + "&genre=" + advancedSearchParams.genre
           + "&imdb=" + advancedSearchParams.imdb
-          + "&tomatometer" + advancedSearchParams.tomatometer
-          + "&metacritic" + advancedSearchParams.metacritic;
+          + "&tomatometer=" + advancedSearchParams.tomatometer
+          + "&metacritic=" + advancedSearchParams.metacritic
+          + "&votes=" + advancedSearchParams.votes;
 
     this.movieService.getMoviesByFilter(path).subscribe(
       movies => {
-        this.movies = movies;
+        this.movies = this.movies.concat(movies);
 
         this.inProgress = false;
 
         this.parameters = advancedSearchParams;
+
+        this.scrolledFlag = false;
       },
       err => {
         console.log(err);
@@ -83,14 +100,6 @@ export class MovieComponent implements OnInit {
   }
 
   protected search(searchParams: Search) {
-    this.inProgress = true;
-
-    this.movie = null;
-
-    this.movies = null;
-
-    this.showAlert = false;
-
     this.movieService.getMovieByTitle(searchParams.title).subscribe(
       movie => {
         if (movie.status == 204) {
@@ -116,6 +125,10 @@ export class MovieComponent implements OnInit {
   }
 
   protected onScroll(): void {
-    this.advancedSearch(this.parameters);
+    if (!this.scrolledFlag) {
+      this.scrolledFlag = true;
+
+      this.advancedSearch(this.parameters);
+    }
   }
 }

@@ -124,7 +124,7 @@ namespace Movies.Repositories
                         .ThenByDescending(m => double.Parse(m.ImdbRating))
                         .ThenByDescending(m => int.Parse(m.TomatoMeter));
 
-                    movies = orderedMovies.Take(parameters.From + 20).ToList();
+                    movies = orderedMovies.Skip(parameters.From).Take(20).ToList();
                 }
                 catch (Exception ex)
                 {

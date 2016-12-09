@@ -53,7 +53,7 @@ export class AdvancedSearchComponent implements OnInit {
     if (this.selectedGenre != "Select Genre") {
       this.advancedSearchEmitter
         .getSubject()
-        .next(new AdvancedSearch(this.selectedGenre, this.imdb, this.tomatometer, this.metacritic));
+        .next(new AdvancedSearch(this.selectedGenre, this.imdb, this.tomatometer, this.metacritic, this.votes));
     } else {
      this.showAlert = true;
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Movies.Models.Entities;
 using Movies.Services.Interfaces;
@@ -28,11 +29,11 @@ namespace Movies.Controllers
         }
         
         [HttpGet]
-        public ActionResult GetFilteredMovies(int from, string genre, double imdb, int tomatometer, int metacritic, int votes)
+        public async Task<ActionResult> GetFilteredMovies(int from, string genre, double imdb, int tomatometer, int metacritic, int votes)
         {
             var filterParams = new FilterParams(genre, votes, imdb, tomatometer, metacritic, from);
 
-            var movies = _moviesService.GetMoviesByFilterParams(filterParams);
+            var movies = await _moviesService.GetMoviesByFilterParams(filterParams);
 
             var requestAdded = _requestsCache.AddRequest(genre);
 

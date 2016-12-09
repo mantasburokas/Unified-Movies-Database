@@ -6,11 +6,15 @@ export class AdvancedSearch {
   public tomatometer: number;
   public metacritic: number;
 
-  constructor(genre: string, imdb: number, tomatometer: number, metacritic: number) {
+  public votes: number;
+
+  constructor(genre: string, imdb: number, tomatometer: number, metacritic: number, votes: number) {
     this.genre = genre;
 
     this.imdb = imdb;
     this.tomatometer = tomatometer;
     this.metacritic = metacritic;
+
+    this.votes = votes;
   }
 }
