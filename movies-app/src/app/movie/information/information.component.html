@@ -1,0 +1,28 @@
+<div class="row">
+  <md-input disabled placeholder="Director" style="width: 80%" [(ngModel)]="movie.director"></md-input>
+</div>
+
+<div class="row">
+  <md-input disabled placeholder="Released" [(ngModel)]="movie.released"></md-input>
+  <md-input disabled placeholder="Runtime" [(ngModel)]="movie.runtime"></md-input>
+</div>
+
+<div id="plot" class="row">
+  <label>Plot</label><br>
+  <span>{{movie.plot}}</span>
+</div>
+
+<div id="awards" class="row">
+  <label>Awards</label><br>
+  <span>{{movie.awards}}</span>
+</div>
+
+<div id="imdb" class="row">
+  <md-input disabled placeholder="Imdb" [(ngModel)]="movie.imdbRating"></md-input>
+  <md-input disabled placeholder="Imdb votes" [(ngModel)]="movie.imdbVotes"></md-input>
+</div>
+
+<div class="row">
+  <md-input disabled placeholder="Metascore" [(ngModel)]="movie.metascore"></md-input>
+  <md-input disabled placeholder="Tomatometer" [(ngModel)]="movie.tomatoMeter"></md-input>
+</div>

@@ -27,13 +27,15 @@ import { AdvancedSearchComponent } from './advanced-search/advanced-search.compo
 import { AdvancedSearchEmitter } from "./emitters/avanced.search.emitter";
 
 import {InfiniteScrollModule} from "angular2-infinite-scroll";
+import { InformationComponent } from './movie/information/information.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MovieComponent,
     SearchComponent,
-    AdvancedSearchComponent
+    AdvancedSearchComponent,
+    InformationComponent
   ],
   imports: [
     BrowserModule,

@@ -1,67 +1,14 @@
 <accordion *ngIf="movies || movie" [closeOthers]="oneAtATime">
-  <div *ngIf="movies" infinite-scroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="500" (scrolled)="onScroll()">
+  <div *ngIf="movies" infinite-scroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="500"
+       (scrolled)="onScroll()">
     <accordion-group *ngFor="let m of movies" [heading]="m.title">
-      <div class="row">
-        <md-input disabled placeholder="Director" [(ngModel)]="m.director"></md-input>
-      </div>
-
-      <div class="row">
-        <md-input disabled placeholder="Released" [(ngModel)]="m.released"></md-input>
-        <md-input disabled placeholder="Runtime" [(ngModel)]="m.runtime"></md-input>
-      </div>
-
-      <div class="row" style="margin: 0 5% 0 5%">
-        <label>Plot</label><br>
-        <span>{{m.plot}}</span>
-      </div>
-
-      <div class="row" style="margin: 2% 5% 0 5%">
-        <label>Awards</label><br>
-        <span>{{m.awards}}</span>
-      </div>
-
-      <div class="row" style="margin-top: 2%">
-        <md-input disabled placeholder="Imdb" [(ngModel)]="m.imdbRating"></md-input>
-        <md-input disabled placeholder="Imdb votes" [(ngModel)]="m.imdbVotes"></md-input>
-      </div>
-
-      <div class="row">
-        <md-input disabled placeholder="Metascore" [(ngModel)]="m.metascore"></md-input>
-        <md-input disabled placeholder="Tomatometer" [(ngModel)]="m.tomatoMeter"></md-input>
-      </div>
+      <app-information [movie]="m"></app-information>
     </accordion-group>
   </div>
 
   <accordion-group *ngIf="movie" [heading]="movie.title">
-    <div class="row">
-      <md-input disabled placeholder="Director" style="width: 80%" [(ngModel)]="movie.director"></md-input>
-    </div>
-
-    <div class="row">
-      <md-input disabled placeholder="Released" [(ngModel)]="movie.released"></md-input>
-      <md-input disabled placeholder="Runtime" [(ngModel)]="movie.runtime"></md-input>
-    </div>
-
-    <div class="row" style="margin: 0 5% 0 5%">
-      <label>Plot</label><br>
-      <span>{{movie.plot}}</span>
-    </div>
-
-    <div class="row" style="margin: 2% 5% 0 5%">
-      <label>Awards</label><br>
-      <span>{{movie.awards}}</span>
-    </div>
-
-    <div class="row" style="margin-top: 2%">
-      <md-input disabled placeholder="Imdb" [(ngModel)]="movie.imdbRating"></md-input>
-      <md-input disabled placeholder="Imdb votes" [(ngModel)]="movie.imdbVotes"></md-input>
-    </div>
-
-    <div class="row">
-      <md-input disabled placeholder="Metascore" [(ngModel)]="movie.metascore"></md-input>
-      <md-input disabled placeholder="Tomatometer" [(ngModel)]="movie.tomatoMeter"></md-input>
-    </div>
-      </accordion-group>
+    <app-information [movie]="movie"></app-information>
+  </accordion-group>
 </accordion>
 
 <md-progress-circle *ngIf="inProgress" mode="indeterminate" color="primary"></md-progress-circle>
