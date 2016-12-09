@@ -1,46 +1,44 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using Movies.Helpers;
+using Movies.Models.Entities;
 using Movies.Services.Interfaces;
 
 namespace Movies.Controllers
 {
-    [Route("api/movies/genre")]
-    public class MoviesByGenreController : Controller
+    [Route("api/movies/filter")]
+    public class MoviesFilterController : Controller
     {
         private readonly IMoviesService _moviesService;
-
         private readonly IMoviesRequestsCache _requestsCache;
 
-        public MoviesByGenreController(IMoviesService moviesService, IMoviesRequestsCache requestsCache)
+        public MoviesFilterController(IMoviesService moviesService, IMoviesRequestsCache requestsCache)
         {
             if (moviesService == null)
             {
                 throw new ArgumentNullException(nameof(moviesService));
             }
 
+            if (requestsCache == null)
+            {
+                throw new ArgumentNullException(nameof(requestsCache));
+            }
+
             _moviesService = moviesService;
             _requestsCache = requestsCache;
         }
-
+        
         [HttpGet]
-        [Route("{genre}", Name = nameof(MovieRoutes.GetMoviesByGenre))]
-        public IActionResult GetMoviesByGenre(string genre)
+        public ActionResult GetFilteredMovies(int from, string genre, double imdb, int tomatometer, int metacritic, int votes)
         {
-            var movies = _moviesService.GetMoviesByGenre(genre);
+            var filterParams = new FilterParams(genre, votes, imdb, tomatometer, metacritic, from);
+
+            var movies = _moviesService.GetMoviesByFilterParams(filterParams);
 
             var requestAdded = _requestsCache.AddRequest(genre);
-                
+
             if (requestAdded)
             {
                 _moviesService.UpdateMoviesByGenre(genre);
-
-                return Ok(movies);
-            }
-
-            if (_requestsCache.IsRequestFinished(genre))
-            {
-                return StatusCode(404, movies);
             }
 
             return Ok(movies);

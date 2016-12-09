@@ -1,16 +1,16 @@
-<md-progress-circle *ngIf="inProgress" mode="indeterminate" color="primary"></md-progress-circle>
-
-
 <accordion *ngIf="movies || movie" [closeOthers]="oneAtATime">
-  <accordion-group *ngFor="let m of movies" [heading]="m.title">
-    {{m | json}}
-  </accordion-group>
+  <div *ngIf="movies" infinite-scroll [infiniteScrollDistance]="0" [infiniteScrollThrottle]="500" (scrolled)="onScroll()">
+    <accordion-group *ngFor="let m of movies" [heading]="m.title">
+      {{m | json}}
+    </accordion-group>
+  </div>
 
-  <accordion-group [heading]="movie.title">
+  <accordion-group *ngIf="movie" [heading]="movie.title">
     {{movie || json}}
   </accordion-group>
 </accordion>
 
+<md-progress-circle *ngIf="inProgress" mode="indeterminate" color="primary"></md-progress-circle>
 
 <div id="movie-not-found-alert">
   <alert type="danger" *ngIf="showAlert">

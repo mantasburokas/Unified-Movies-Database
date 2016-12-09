@@ -14,21 +14,34 @@
     </div>
 
     <div class="col-md-4">
-      <md-input placeholder="Votes" type="number" min="0"></md-input>
+      <md-input placeholder="Votes" type="number" min="0">
+        {{votes}}
+      </md-input>
     </div>
   </div>
 
   <div class="row text-center">
     <div class="col-md-4">
-      <md-input placeholder="Imdb" type="number" min="0" max="10"></md-input>
+      <md-input placeholder="Imdb" type="number" min="0" max="10">
+        {{imdb}}
+      </md-input>
     </div>
     <div class="col-md-4">
       <md-input placeholder="Tomatometer" type="number" min="0" max="100">
+        {{tomatometer}}
         <span md-suffix>%</span>
       </md-input>
     </div>
     <div class="col-md-4">
-      <md-input placeholder="Metacritic" type="number" min="0" max="100"></md-input>
+      <md-input placeholder="Metacritic" type="number" min="0" max="100">
+        {{metacritic}}
+      </md-input>
     </div>
   </div>
 </md-card>
+
+<div id="alert">
+  <alert type="danger" *ngIf="showAlert">
+    <strong>Select genre</strong>
+  </alert>
+</div>

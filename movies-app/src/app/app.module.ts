@@ -26,6 +26,8 @@ import { SearchComponent } from './search/search.component';
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
 import { AdvancedSearchEmitter } from "./emitters/avanced.search.emitter";
 
+import {InfiniteScrollModule} from "angular2-infinite-scroll";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +47,8 @@ import { AdvancedSearchEmitter } from "./emitters/avanced.search.emitter";
     MdProgressCircleModule,
     Ng2DropdownModule,
     AccordionModule,
-    AlertModule
+    AlertModule,
+    InfiniteScrollModule
   ],
   providers: [
     OVERLAY_PROVIDERS,

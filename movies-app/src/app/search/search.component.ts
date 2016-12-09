@@ -21,8 +21,6 @@ export class SearchComponent implements OnInit {
 
   protected title: string;
 
-  protected showAlert: boolean = false;
-
   constructor(private searchEmitter: SearchEmitter) {
 
   }

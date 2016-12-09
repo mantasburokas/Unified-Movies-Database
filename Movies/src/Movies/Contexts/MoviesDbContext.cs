@@ -62,6 +62,10 @@ namespace Movies.Contexts
                 .HasIndex(m => m.TomatoMeter)
                 .IsUnique(false);
 
+            modelBuilder.Entity<Movie>()
+                .HasIndex(m => m.ImdbVotes)
+                .IsUnique(false);
+
             modelBuilder.Entity<Genre>()
                 .HasIndex(g => g.Name)
                 .IsUnique();

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Movies.Models.Entities;
 using MovieDto = Movies.Models.Dtos.Movie;
 using MoviePoco = Movies.Models.Pocos.Movie;
 
@@ -149,6 +150,13 @@ namespace Movies.Services
             }
 
             return movieDtos;
+        }
+
+        public async Task<ICollection<MovieDto>> GetMoviesByFilterParams(FilterParams parameters)
+        {
+            var movies = await _moviesRepository.GetMoviesByFilter(parameters);
+
+            return _moviesMapper.Map(movies);
         }
     }
 }

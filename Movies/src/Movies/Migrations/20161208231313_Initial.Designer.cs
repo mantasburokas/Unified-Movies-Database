@@ -8,7 +8,7 @@ using Movies.Contexts;
 namespace Movies.Migrations
 {
     [DbContext(typeof(MoviesDbContext))]
-    [Migration("20161119133652_Initial")]
+    [Migration("20161208231313_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -16,48 +16,76 @@ namespace Movies.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1");
 
-            modelBuilder.Entity("Movies.Models.Genre", b =>
+            modelBuilder.Entity("Movies.Models.Pocos.Genre", b =>
                 {
                     b.Property<int>("GenreId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 64);
 
                     b.HasKey("GenreId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("Movies.Models.Movie", b =>
+            modelBuilder.Entity("Movies.Models.Pocos.Movie", b =>
                 {
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasAnnotation("MaxLength", 128);
 
                     b.Property<string>("Released");
 
+                    b.Property<string>("Awards")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 128);
+
+                    b.Property<string>("Director")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 64);
+
                     b.Property<string>("ImdbRating")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 4);
+
+                    b.Property<string>("ImdbVotes")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 128);
 
                     b.Property<string>("Metascore")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 4);
+
+                    b.Property<string>("Plot")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 512);
+
+                    b.Property<string>("Runtime")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 32);
 
                     b.Property<string>("TomatoMeter")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 4);
 
                     b.HasKey("Title", "Released");
 
                     b.HasIndex("ImdbRating");
 
-                    b.HasIndex("Metascore");
+                    b.HasIndex("ImdbVotes");
 
-                    b.HasIndex("Title");
+                    b.HasIndex("Metascore");
 
                     b.HasIndex("TomatoMeter");
 
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("Movies.Models.MovieGenre", b =>
+            modelBuilder.Entity("Movies.Models.Pocos.MovieGenre", b =>
                 {
                     b.Property<string>("Title");
 
@@ -74,14 +102,14 @@ namespace Movies.Migrations
                     b.ToTable("MovieGenre");
                 });
 
-            modelBuilder.Entity("Movies.Models.MovieGenre", b =>
+            modelBuilder.Entity("Movies.Models.Pocos.MovieGenre", b =>
                 {
-                    b.HasOne("Movies.Models.Genre", "Genre")
+                    b.HasOne("Movies.Models.Pocos.Genre", "Genre")
                         .WithMany("MovieGenres")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Movies.Models.Movie", "Movie")
+                    b.HasOne("Movies.Models.Pocos.Movie", "Movie")
                         .WithMany("MovieGenres")
                         .HasForeignKey("Title", "Released")
                         .OnDelete(DeleteBehavior.Cascade);

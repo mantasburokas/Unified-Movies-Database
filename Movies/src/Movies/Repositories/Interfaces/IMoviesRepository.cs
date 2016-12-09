@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Movies.Models.Entities;
 using Movies.Models.Pocos;
 
 namespace Movies.Repositories.Interfaces
@@ -11,6 +12,8 @@ namespace Movies.Repositories.Interfaces
         Task AddMovie(Movie movie);
 
         Task<ICollection<Movie>> GetMoviesByGenre(string genre);
+
+        Task<ICollection<Movie>> GetMoviesByFilter(FilterParams parameters);
             
         Movie GetMovieByTitle(string title);
 

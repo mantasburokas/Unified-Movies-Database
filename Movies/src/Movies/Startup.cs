@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Movies.Clients;
@@ -54,8 +55,9 @@ namespace Movies
                 .AddSingleton<IGenresMapper, GenresMapper>()
                 .AddSingleton<IMoviesMapper, MoviesMapper>()
                 .AddSingleton<IMoviesDbContextFactory>(new MoviesDbContextFactory(connectionString))
-                .AddSingleton<IMoviesRepository, MoviesRepository>();
-            }
+                .AddSingleton<IMoviesRepository, MoviesRepository>()
+                .AddDbContext<MoviesDbContext>(options => options.UseSqlite(connectionString));
+        }
 
         public void Configure(IApplicationBuilder app)
         {

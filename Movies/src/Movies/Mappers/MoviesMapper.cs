@@ -33,6 +33,11 @@ namespace Movies.Mappers
                 ImdbRating = movieOmdb.ImdbRating,
                 Metascore = movieOmdb.Metascore,
                 TomatoMeter = movieOmdb.TomatoMeter,
+                ImdbVotes = movieOmdb.ImdbVotes,
+                Runtime = movieOmdb.Runtime,
+                Plot = movieOmdb.Plot,
+                Director = movieOmdb.Director,
+                Awards = movieOmdb.Awards,
                 MovieGenres = movieGenres
             };
 
@@ -61,7 +66,12 @@ namespace Movies.Mappers
                 Released = moviePoco.Released,
                 ImdbRating = moviePoco.ImdbRating,
                 Metascore = moviePoco.Metascore,
-                TomatoMeter = moviePoco.TomatoMeter
+                TomatoMeter = moviePoco.TomatoMeter,
+                ImdbVotes =  moviePoco.ImdbVotes,
+                Runtime = moviePoco.Runtime,
+                Plot = moviePoco.Plot,
+                Director = moviePoco.Director,
+                Awards = moviePoco.Awards
             };
 
             return movie;

@@ -9,6 +9,7 @@ import {Movie} from "../models/movie";
 import {Search} from "../models/search";
 
 import {AdvancedSearchEmitter} from "../emitters/avanced.search.emitter";
+import {AdvancedSearch} from "../models/advanced.search";
 
 
 @Component({
@@ -28,6 +29,8 @@ export class MovieComponent implements OnInit {
 
   protected showAlert: boolean = false;
 
+  protected parameters: AdvancedSearch;
+
   constructor(private movieService: MovieService, private searchEmitter: SearchEmitter, private advancedSearchEmitter: AdvancedSearchEmitter) {
     searchEmitter.getObservable().subscribe(
       searchParams => {
@@ -39,7 +42,8 @@ export class MovieComponent implements OnInit {
     );
 
     advancedSearchEmitter.getObservable().subscribe(
-      search => {
+      advancedSearchParams => {
+        this.advancedSearch(advancedSearchParams);
       },
       err => {
         console.log(err)
@@ -51,16 +55,26 @@ export class MovieComponent implements OnInit {
 
   }
 
-  protected advancedSearch(genre: string) {
+  protected advancedSearch(advancedSearchParams: AdvancedSearch) {
     this.inProgress = true;
 
-    this.movieService.getMoviesByGenre(genre).subscribe(
+    this.movie = null;
+
+    this.showAlert = false;
+
+    let path = "?from=0"
+          + "&genre=" + advancedSearchParams.genre
+          + "&imdb=" + advancedSearchParams.imdb
+          + "&tomatometer" + advancedSearchParams.tomatometer
+          + "&metacritic" + advancedSearchParams.metacritic;
+
+    this.movieService.getMoviesByFilter(path).subscribe(
       movies => {
         this.movies = movies;
 
-        this.movie = null;
-
         this.inProgress = false;
+
+        this.parameters = advancedSearchParams;
       },
       err => {
         console.log(err);
@@ -99,5 +113,9 @@ export class MovieComponent implements OnInit {
         }
       }
     );
+  }
+
+  protected onScroll(): void {
+    this.advancedSearch(this.parameters);
   }
 }

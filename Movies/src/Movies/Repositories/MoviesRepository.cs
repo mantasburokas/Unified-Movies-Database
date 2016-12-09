@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Movies.Models.Entities;
 
 namespace Movies.Repositories
 {
@@ -98,6 +99,73 @@ namespace Movies.Repositories
 
                 return movies;
             }
+        }
+
+        public async Task<ICollection<Movie>> GetMoviesByFilter(FilterParams parameters)
+        {
+            using (var db = _dbFactory.Create())
+            {
+                ICollection<Movie> movies = null;
+
+                try
+                {
+                    var genre = await db.Genres.SingleOrDefaultAsync(g => g.Name == parameters.Genre);
+
+                    var genreId = genre.GenreId;
+
+                    var filteredMovies = await db.Movies
+                        .Include(m => m.MovieGenres)
+                        .ThenInclude(mg => mg.Genre)
+                        .Where(m => CheckIfMovieIsValid(m, genreId, parameters))
+                        .ToListAsync();
+
+                    var orderedMovies = filteredMovies
+                        .OrderByDescending(m => int.Parse(m.Metascore))
+                        .ThenByDescending(m => double.Parse(m.ImdbRating))
+                        .ThenByDescending(m => int.Parse(m.TomatoMeter));
+
+                    movies = orderedMovies.Take(parameters.From + 20).ToList();
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ex.Message);
+                }
+
+                return movies;
+            }
+        }
+
+        protected bool CheckIfMovieIsValid(Movie movie, int genreId, FilterParams parameters)
+        {
+            var containsGenre = movie.MovieGenres.Any(mg => mg.GenreId == genreId);
+
+            if (containsGenre)
+            {
+                double imdb;
+
+                double imdbVotes;
+
+                int tomatometer;
+
+                int metacritic;
+
+                if (double.TryParse(movie.ImdbRating, out imdb) &&
+                    double.TryParse(movie.ImdbVotes, out imdbVotes) &&
+                    int.TryParse(movie.TomatoMeter, out tomatometer) &&
+                    int.TryParse(movie.Metascore, out metacritic))
+                {
+                    if (imdb >= parameters.Imdb &&
+                        imdbVotes >= parameters.Votes &&
+                        tomatometer >= parameters.Tomatometer &&
+                        metacritic >= parameters.Metacritic)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public Movie GetMovieByTitle(string title)
