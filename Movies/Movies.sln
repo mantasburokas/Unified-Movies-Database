@@ -12,6 +12,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Movies", "src\Movies\Movies.xproj", "{CC2F8939-7AF0-4AEC-8ED8-88343D698D80}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{25023438-8211-4E54-8560-EFF6774A83D8}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MapperTests", "tests\MapperTests\MapperTests.xproj", "{16F80779-5B36-4362-8E80-877DB87B5E23}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "RequestsCacheTests", "tests\RequestsCacheTests\RequestsCacheTests.xproj", "{F9E1EE87-D4EB-41AC-8E3B-02492BBF6A2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,11 +28,21 @@ Global
 		{CC2F8939-7AF0-4AEC-8ED8-88343D698D80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC2F8939-7AF0-4AEC-8ED8-88343D698D80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC2F8939-7AF0-4AEC-8ED8-88343D698D80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16F80779-5B36-4362-8E80-877DB87B5E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16F80779-5B36-4362-8E80-877DB87B5E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16F80779-5B36-4362-8E80-877DB87B5E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16F80779-5B36-4362-8E80-877DB87B5E23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9E1EE87-D4EB-41AC-8E3B-02492BBF6A2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9E1EE87-D4EB-41AC-8E3B-02492BBF6A2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9E1EE87-D4EB-41AC-8E3B-02492BBF6A2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9E1EE87-D4EB-41AC-8E3B-02492BBF6A2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CC2F8939-7AF0-4AEC-8ED8-88343D698D80} = {83D25BEF-2BC1-414D-90D3-AC0A7DA2C4C8}
+		{16F80779-5B36-4362-8E80-877DB87B5E23} = {25023438-8211-4E54-8560-EFF6774A83D8}
+		{F9E1EE87-D4EB-41AC-8E3B-02492BBF6A2E} = {25023438-8211-4E54-8560-EFF6774A83D8}
 	EndGlobalSection
 EndGlobal
